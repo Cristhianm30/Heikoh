@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.application.dto.request;
+package io.github.cristhianm30.heikoh.application.dto.request;
 
 import lombok.*;
 

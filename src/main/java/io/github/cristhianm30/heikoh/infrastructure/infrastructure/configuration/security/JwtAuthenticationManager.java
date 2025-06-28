@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.configuration.security;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.configuration.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static io.github.cristhianm30.Heikoh.domain.util.constant.EnvironmentConstant.JWT_SECRET;
-import static io.github.cristhianm30.Heikoh.domain.util.constant.InfrastructureConstant.ROLE;
+import static io.github.cristhianm30.heikoh.domain.util.constant.EnvironmentConstant.JWT_SECRET;
+import static io.github.cristhianm30.heikoh.domain.util.constant.InfrastructureConstant.ROLE;
 
 @Component
 @RequiredArgsConstructor

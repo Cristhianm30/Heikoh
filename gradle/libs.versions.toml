@@ -1,8 +1,8 @@
 [versions]
 springboot = "3.5.3"
 springDependencyManagement = "1.1.7"
-mapstruct = "1.6.3"
-lombok = "1.18.38"
+mapstruct = "1.5.5.Final"
+lombok = "1.18.30"
 reactorTest = "3.7.6"
 mockito = "5.18.0"
 r2dbcMysql = "1.4.1"

@@ -1,7 +1,7 @@
-package io.github.cristhianm30.Heikoh.application.service;
+package io.github.cristhianm30.heikoh.application.service;
 
-import io.github.cristhianm30.Heikoh.application.dto.request.RegisterUserRequest;
-import io.github.cristhianm30.Heikoh.application.dto.response.UserResponse;
+import io.github.cristhianm30.heikoh.application.dto.request.RegisterUserRequest;
+import io.github.cristhianm30.heikoh.application.dto.response.UserResponse;
 import reactor.core.publisher.Mono;
 
 public interface RegisterUserService {

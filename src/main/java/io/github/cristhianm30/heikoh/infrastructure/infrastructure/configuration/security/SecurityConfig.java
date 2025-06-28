@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.configuration.security;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
-import static io.github.cristhianm30.Heikoh.domain.util.constant.PathConstant.*;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.*;
 
 @Configuration
 @EnableReactiveMethodSecurity

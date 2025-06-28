@@ -1,14 +1,14 @@
-package io.github.cristhianm30.Heikoh.domain.model;
-import lombok.*;
+package io.github.cristhianm30.heikoh.domain.model;
 
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserModel {
     private UUID id;

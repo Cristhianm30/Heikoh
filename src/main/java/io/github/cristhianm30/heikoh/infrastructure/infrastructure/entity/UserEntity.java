@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.entity;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

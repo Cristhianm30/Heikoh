@@ -1,6 +1,6 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.exception;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.exception;
 
-import io.github.cristhianm30.Heikoh.domain.exception.UserAlreadyExistsException;
+import io.github.cristhianm30.heikoh.domain.exception.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-import static io.github.cristhianm30.Heikoh.domain.util.constant.ExceptionConstants.UNEXPECTED_ERROR_TRY_AGAIN;
-import static io.github.cristhianm30.Heikoh.domain.util.constant.LogConstant.UNEXPECTED_ERROR;
-import static io.github.cristhianm30.Heikoh.domain.util.constant.LogConstant.USER_REGISTRATION_FAILED;
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.UNEXPECTED_ERROR_TRY_AGAIN;
+import static io.github.cristhianm30.heikoh.domain.util.constant.LogConstant.UNEXPECTED_ERROR;
+import static io.github.cristhianm30.heikoh.domain.util.constant.LogConstant.USER_REGISTRATION_FAILED;
 
 @Slf4j
 @RestControllerAdvice

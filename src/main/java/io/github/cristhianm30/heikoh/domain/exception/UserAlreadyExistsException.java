@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.domain.exception;
+package io.github.cristhianm30.heikoh.domain.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException(String message) {

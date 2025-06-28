@@ -1,7 +1,7 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.input.rest.handler;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.input.rest.handler;
 
-import io.github.cristhianm30.Heikoh.application.dto.request.RegisterUserRequest;
-import io.github.cristhianm30.Heikoh.application.service.RegisterUserService;
+import io.github.cristhianm30.heikoh.application.dto.request.RegisterUserRequest;
+import io.github.cristhianm30.heikoh.application.service.RegisterUserService;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.stream.Collectors;
 
-import static io.github.cristhianm30.Heikoh.domain.util.constant.PathConstant.USER_REGISTER;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.USER_REGISTER;
 
 @Component
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.configuration.security;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.configuration.security;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,7 +8,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static io.github.cristhianm30.Heikoh.domain.util.constant.InfrastructureConstant.BEARER;
+import static io.github.cristhianm30.heikoh.domain.util.constant.InfrastructureConstant.BEARER;
 
 @Component
 public class JwtAuthenticationConverter implements ServerAuthenticationConverter {

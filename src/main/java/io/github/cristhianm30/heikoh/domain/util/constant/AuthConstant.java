@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.domain.util.constant;
+package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class AuthConstant {
     public static final String JWT_SECRET = "${security.jwt.secret}";

@@ -1,7 +1,7 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.mapper;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.mapper;
 
-import io.github.cristhianm30.Heikoh.domain.model.UserModel;
-import io.github.cristhianm30.Heikoh.infrastructure.infrastructure.entity.UserEntity;
+import io.github.cristhianm30.heikoh.domain.model.UserModel;
+import io.github.cristhianm30.heikoh.infrastructure.infrastructure.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

@@ -47,6 +47,8 @@ dependencies {
 
 	runtimeOnly(libs.r2dbc.mysql)
 
+	compileOnly 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
 }
 
 tasks.named('test') {
@@ -69,4 +71,11 @@ jacocoTestReport {
 		html.required = true
 		csv.required = false
 	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs = [
+			'-Amapstruct.defaultComponentModel=spring',
+			'-Amapstruct.unmappedTargetPolicy=IGNORE'
+	]
 }

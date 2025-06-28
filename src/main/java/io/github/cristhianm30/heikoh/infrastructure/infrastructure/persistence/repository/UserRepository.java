@@ -1,6 +1,6 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.persistence.repository;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.persistence.repository;
 
-import io.github.cristhianm30.Heikoh.infrastructure.infrastructure.entity.UserEntity;
+import io.github.cristhianm30.heikoh.infrastructure.infrastructure.entity.UserEntity;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 

@@ -1,9 +1,9 @@
-package io.github.cristhianm30.Heikoh.application.mapper;
+package io.github.cristhianm30.heikoh.application.mapper;
 
 
-import io.github.cristhianm30.Heikoh.application.dto.request.RegisterUserRequest;
-import io.github.cristhianm30.Heikoh.application.dto.response.UserResponse;
-import io.github.cristhianm30.Heikoh.domain.model.UserModel;
+import io.github.cristhianm30.heikoh.application.dto.request.RegisterUserRequest;
+import io.github.cristhianm30.heikoh.application.dto.response.UserResponse;
+import io.github.cristhianm30.heikoh.domain.model.UserModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

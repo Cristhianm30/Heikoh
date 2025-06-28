@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.infrastructure.infrastructure.exception;
+package io.github.cristhianm30.heikoh.infrastructure.infrastructure.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

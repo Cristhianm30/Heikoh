@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.domain.util.constant;
+package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class ExceptionConstants {
     public static final String UNEXPECTED_ERROR_TRY_AGAIN = "An unexpected error occurred. Please try again later.";

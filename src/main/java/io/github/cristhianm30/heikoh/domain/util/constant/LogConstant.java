@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.domain.util.constant;
+package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class LogConstant {
     public static final String USER_REGISTRATION_FAILED = "User registration failed: {}";

@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh.domain.util.constant;
+package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class PathConstant {
     public static final String USER_REGISTER = "/api/v1/auth/register";
