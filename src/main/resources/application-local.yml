@@ -2,6 +2,7 @@ server:
   port: ${SERVER_PORT}
   servlet:
     context-path: /api
+
 spring:
   config:
     activate:
@@ -13,3 +14,12 @@ spring:
   sql:
     init:
       mode: always
+
+security:
+  jwt:
+    secret: ${JWT_PASSWORD}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web.reactive: DEBUG

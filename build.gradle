@@ -26,6 +26,9 @@ repositories {
 
 dependencies {
 	implementation(libs.bundles.spring.web.deps)
+	implementation(libs.jjwt.api)
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
 
 	implementation(libs.mapstruct)
 	annotationProcessor(libs.mapstruct.processor)
@@ -37,6 +40,7 @@ dependencies {
 
 	developmentOnly(libs.springboot.devtools)
 	testImplementation(libs.springboot.test)
+	testImplementation(libs.spring.security.test)
 	testImplementation(libs.mockito.core)
 	testImplementation(libs.reactor.test)
 	testRuntimeOnly(libs.junit.platform.launcher)
