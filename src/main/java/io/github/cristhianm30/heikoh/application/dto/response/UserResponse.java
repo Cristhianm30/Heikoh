@@ -3,7 +3,6 @@ package io.github.cristhianm30.heikoh.application.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class UserResponse {
-    private UUID id;
+    private Long id;
     private String username;
     private String email;
     private Boolean enabled;

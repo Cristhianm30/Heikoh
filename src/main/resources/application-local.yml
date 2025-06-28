@@ -18,6 +18,8 @@ spring:
 security:
   jwt:
     secret: ${JWT_PASSWORD}
+    expiration:
+      minutes: ${JWT_EXPIRATION_MINUTES}
 
 logging:
   level:

@@ -26,28 +26,30 @@ repositories {
 
 dependencies {
 	implementation(libs.bundles.spring.web.deps)
-	implementation(libs.jjwt.api)
-	runtimeOnly(libs.jjwt.impl)
-	runtimeOnly(libs.jjwt.jackson)
 
-	implementation(libs.mapstruct)
-	annotationProcessor(libs.mapstruct.processor)
+	runtimeOnly(libs.r2dbc.mysql)
 
 	compileOnly(libs.lombok)
 	annotationProcessor(libs.lombok)
 	testCompileOnly(libs.lombok)
 	testAnnotationProcessor(libs.lombok)
 
+
+	implementation(libs.mapstruct)
+	annotationProcessor(libs.mapstruct.processor)
+
+	implementation(libs.jjwt.api)
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
+
 	developmentOnly(libs.springboot.devtools)
+
+
 	testImplementation(libs.springboot.test)
 	testImplementation(libs.spring.security.test)
 	testImplementation(libs.mockito.core)
 	testImplementation(libs.reactor.test)
 	testRuntimeOnly(libs.junit.platform.launcher)
-
-	runtimeOnly(libs.r2dbc.mysql)
-
-	compileOnly 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
 }
 
@@ -73,9 +75,3 @@ jacocoTestReport {
 	}
 }
 
-tasks.withType(JavaCompile).configureEach {
-	options.compilerArgs = [
-			'-Amapstruct.defaultComponentModel=spring',
-			'-Amapstruct.unmappedTargetPolicy=IGNORE'
-	]
-}
