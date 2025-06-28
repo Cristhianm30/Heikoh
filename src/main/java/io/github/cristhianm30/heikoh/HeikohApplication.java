@@ -1,4 +1,4 @@
-package io.github.cristhianm30.Heikoh;
+package io.github.cristhianm30.heikoh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

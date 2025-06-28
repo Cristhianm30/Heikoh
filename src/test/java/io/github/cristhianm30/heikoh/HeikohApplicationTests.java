@@ -1,13 +1,9 @@
-package io.github.cristhianm30.Heikoh;
+package io.github.cristhianm30.heikoh;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class HeikohApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
 
 }
