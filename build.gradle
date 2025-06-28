@@ -1,0 +1,68 @@
+plugins {
+	id 'java'
+	id 'jacoco'
+	alias(libs.plugins.springboot)
+	alias(libs.plugins.springDependencyManagement)
+}
+
+group = 'io.github.cristhianm30'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation(libs.bundles.spring.web.deps)
+
+	implementation(libs.mapstruct)
+	annotationProcessor(libs.mapstruct.processor)
+
+	compileOnly(libs.lombok)
+	annotationProcessor(libs.lombok)
+	testCompileOnly(libs.lombok)
+	testAnnotationProcessor(libs.lombok)
+
+	developmentOnly(libs.springboot.devtools)
+	testImplementation(libs.springboot.test)
+	testImplementation(libs.mockito.core)
+	testImplementation(libs.reactor.test)
+	testRuntimeOnly(libs.junit.platform.launcher)
+
+	runtimeOnly(libs.r2dbc.mysql)
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+	}
+}
