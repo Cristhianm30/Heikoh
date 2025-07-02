@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
 	implementation(libs.bundles.spring.web.deps)
+	implementation(libs.springboot.validation)
 
 	runtimeOnly(libs.r2dbc.mysql)
 

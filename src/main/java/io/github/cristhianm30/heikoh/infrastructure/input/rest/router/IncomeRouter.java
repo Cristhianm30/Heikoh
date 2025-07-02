@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.INCOME_REGISTER;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -20,7 +21,7 @@ public class IncomeRouter {
 
     @Bean
     public RouterFunction<ServerResponse> incomeRoutes() {
-        return route(POST("/api/v1/incomes")
+        return route(POST(INCOME_REGISTER)
                         .and(accept(MediaType.APPLICATION_JSON)),
                 incomeHandler::registerIncome);
     }
