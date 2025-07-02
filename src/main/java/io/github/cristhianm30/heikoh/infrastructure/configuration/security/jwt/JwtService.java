@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.ID;
 import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.ROLE;
 import static io.github.cristhianm30.heikoh.domain.util.constant.EnvironmentConstant.JWT_EXPIRATION_MINUTES;
 import static io.github.cristhianm30.heikoh.domain.util.constant.EnvironmentConstant.JWT_SECRET;
@@ -35,6 +36,7 @@ public class JwtService implements JwtPort {
             return Jwts.builder()
                     .subject(user.getUsername())
                     .claim(ROLE, user.getRole())
+                    .claim(ID, user.getId())
                     .issuedAt(Date.from(now))
                     .expiration(expiryDate)
                     .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))

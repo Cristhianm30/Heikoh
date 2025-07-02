@@ -15,8 +15,7 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.JWT_TOKEN_INVALID;
-import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.ROLE;
+import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.*;
 import static io.github.cristhianm30.heikoh.domain.util.constant.EnvironmentConstant.JWT_SECRET;
 
 @Component
@@ -41,9 +40,12 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
                 .map(claims -> {
                     String username = claims.getSubject();
                     String role = claims.get(ROLE, String.class);
+                    Long id = claims.get(ID, Long.class);
                     List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
-                    return new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    AuthenticatedUser authenticatedUser = new AuthenticatedUser(id, username);
+
+                    return new UsernamePasswordAuthenticationToken(authenticatedUser, null, authorities);
                 });
     }
 }
