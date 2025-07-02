@@ -152,4 +152,15 @@ class AuthServiceImplTest {
                                 ACCOUNT_IS_DISABLED.equals(throwable.getMessage()))
                 .verify();
     }
+
+    @Test
+    void register_ShouldHandleError_WhenRegistrationFails() {
+        when(userDtoMapper.toUserDomain(any(RegisterUserRequest.class))).thenReturn(userModel);
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(authServicePort.registerUser(any(UserModel.class))).thenReturn(Mono.error(new RuntimeException("Database error")));
+
+        StepVerifier.create(authService.register(registerRequest))
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }
