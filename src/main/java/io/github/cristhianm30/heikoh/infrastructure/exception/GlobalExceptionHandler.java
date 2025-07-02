@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidPasswordException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleInvalidPasswordException(InvalidPasswordException ex, ServerWebExchange exchange) {
-        log.warn(USER_LOGIN_FAILED, ex.getMessage());
+        log.warn(INVALID_PASSWORD_LOG, ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .exceptionName(ex.getClass().getSimpleName())
                 .errorMessage(ex.getMessage())
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleUserNotFoundException(UserNotFoundException ex, ServerWebExchange exchange) {
-        log.warn(FIND_USER_FAILED, ex.getMessage());
+        log.warn(USER_NOT_FOUND_LOG, ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .exceptionName(ex.getClass().getSimpleName())
                 .errorMessage(ex.getMessage())
@@ -88,6 +88,30 @@ public class GlobalExceptionHandler {
                 .path(exchange.getRequest().getPath().value())
                 .build();
         return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse));
+    }
+
+    @ExceptionHandler(IncomeNotRegisteredException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleIncomeNotRegisteredException(IncomeNotRegisteredException ex, ServerWebExchange exchange) {
+        log.error(INCOME_REGISTRATION_FAILED, ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse));
+    }
+
+    @ExceptionHandler(ExpenseNotRegisteredException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleExpenseNotRegisteredException(ExpenseNotRegisteredException ex, ServerWebExchange exchange) {
+        log.error(EXPENSE_REGISTRATION_FAILED, ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse));
     }
 
 }

@@ -24,7 +24,7 @@ import reactor.test.StepVerifier;
 
 import static io.github.cristhianm30.heikoh.domain.util.constant.ApplicationConstant.DEFAULT_USER_ROLE;
 import static io.github.cristhianm30.heikoh.domain.util.constant.AuthConstant.INVALID_PASSWORD;
-import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.USER_NOT_ENABLED;
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.ACCOUNT_IS_DISABLED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -149,7 +149,7 @@ class AuthServiceImplTest {
         StepVerifier.create(authService.login(loginRequest))
                 .expectErrorMatches(throwable ->
                         throwable instanceof UserNotEnabledException &&
-                                USER_NOT_ENABLED.equals(throwable.getMessage()))
+                                ACCOUNT_IS_DISABLED.equals(throwable.getMessage()))
                 .verify();
     }
 }
