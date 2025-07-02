@@ -1,33 +1,93 @@
-🚀 Heikoh Backend: API de Finanzas Personales
-"El motor reactivo y seguro para tus finanzas."
+# 🧠 Heikoh Backend - API de Finanzas Personales
 
-✨ ¿Qué es?
-Este es el microservicio de backend para la aplicación Heikoh. Construido con Java y Spring Boot WebFlux, es el cerebro que gestiona la lógica de negocio, la seguridad (JWT) y la persistencia de tus datos financieros en MySQL de forma reactiva. Expone una API RESTful para que el frontend interactúe con tus ingresos, gastos y deudas.
+Bienvenido al backend de **Heikoh** — una aplicación web de finanzas personales que te ayuda a tomar el control total de tus ingresos, gastos y deudas.  
+Este microservicio está construido con **Java + Spring Boot WebFlux**, emplea **arquitectura hexagonal** y expone una **API RESTful reactiva, segura y moderna**. 🚀
 
-🛠️ Stack Tecnológico
-Java ☕
+---
 
-Spring Boot WebFlux: API reactivas y no bloqueantes.
+## ✨ Características Principales
 
-Project Reactor: Programación reactiva.
+- 🔐 **Autenticación con JWT** (registro, login, protección de endpoints)
+- 💰 **CRUD de transacciones financieras** (gastos, ingresos)
+- 💳 **Gestión de deudas y pagos parciales o totales**
+- 📊 **Dashboard financiero** (balance actual, por período, gráfico por categorías)
+- ⚙️ **Categorías personalizadas y configuración de moneda**
+- 🧪 **Pruebas con JUnit, Mockito y Testcontainers**
+- ✅ Validaciones robustas y gestión de errores centralizada
 
-MySQL & Spring Data R2DBC: Persistencia reactiva de datos.
+---
 
-JWT: Autenticación y seguridad de la API.
+## 🧱 Arquitectura del Proyecto
 
-MapStruct: Mapeo eficiente de objetos.
+📦 Basado en una **arquitectura hexagonal** clara y modular:
+```bash
+src/main/java/io/github/cristhianm30/heikoh/
 
-Gradle: Sistema de construcción.
+├── application/ # Casos de uso, servicios, DTOs, mappers
+├── domain/ # Lógica de negocio pura, modelos, puertos, validaciones
+├── infrastructure/ # Adaptadores REST, persistencia R2DBC, seguridad
+└── HeikohApplication.java
+```
 
-Arquitectura Hexagonal: Diseño limpio y desacoplado.
+---
 
-JUnit, Mockito, Testcontainers: Testing robusto.
+## 🛠️ Tecnologías Utilizadas
 
-🏗️ Estructura del Proyecto
-El backend sigue una Arquitectura Hexagonal para una clara separación de responsabilidades:
+| Categoría            | Tecnología                                 |
+|---------------------|---------------------------------------------|
+| 🟨 Lenguaje          | Java 21                                     |
+| ⚛ Framework         | Spring Boot (WebFlux)                       |
+| 🐬 Base de Datos     | MySQL + Spring Data R2DBC                   |
+| 🔐 Seguridad         | JWT (JSON Web Tokens)                       |
+| ↔️ Mapeo de Objetos | MapStruct                                   |
+| 🧪 Testing           | JUnit, Mockito, Testcontainers              |
+| 📦 Build Tool        | Gradle (Groovy DSL)                         |
+| 💻 IDE Recomendado   | IntelliJ IDEA / VS Code                     |
+| 🧩 Arquitectura      | Hexagonal (Ports & Adapters)               |
 
-src/main/java/io/github/cristhianm30/heikoh/backend/
-├── application/     # Casos de uso, DTOs, mappers.
-├── domain/          # Modelos de negocio, puertos, casos de uso, excepciones.
-├── infrastructure/  # Adaptadores (WebFlux REST, persistencia R2DBC, configuraciones).
-└── HeikohBackendApplication.java # Clase principal.
+
+## ⚙️ Cómo Ejecutar Localmente
+
+### 1. Clona el repositorio
+
+```bash
+git clone https://github.com/cristhianm30/heikoh.git
+cd heikoh
+```
+### 2. Configura la base de datos MySQL
+Crea una base de datos local.
+
+Asegúrate de tener un usuario y contraseña válidos.
+
+### 3. Configura application-local.yml
+Recuerda registar tus variables de entorno antes de correr el proyecto.
+
+```yaml
+server:
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: /api
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  r2dbc:
+    url: ${DB_LOCAL_R2DBC_URL}
+    username: ${DB_LOCAL_USERNAME}
+    password: ${DB_LOCAL_PASSWORD}
+  sql:
+    init:
+      mode: always
+
+security:
+  jwt:
+    secret: ${JWT_PASSWORD}
+    expiration:
+      minutes: ${JWT_EXPIRATION_MINUTES}
+
+```
+4. Ejecuta la aplicación
+```bash
+./gradlew bootRun
+```
