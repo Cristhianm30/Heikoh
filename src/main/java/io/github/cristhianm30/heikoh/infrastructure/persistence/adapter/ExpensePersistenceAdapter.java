@@ -8,6 +8,7 @@ import io.github.cristhianm30.heikoh.infrastructure.persistence.repository.Expen
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -42,5 +43,11 @@ public class ExpensePersistenceAdapter implements ExpenseRepositoryPort {
     @Override
     public Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
         return expenseRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+    }
+
+    @Override
+    public Flux<ExpenseModel> findByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
+        return expenseRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate)
+                .map(expenseEntityMapper::toModel);
     }
 }

@@ -8,6 +8,7 @@ import io.github.cristhianm30.heikoh.infrastructure.persistence.repository.Incom
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -42,5 +43,11 @@ public class IncomePersistenceAdapter implements IncomeRepositoryPort {
     @Override
     public Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
         return incomeRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+    }
+
+    @Override
+    public Flux<IncomeModel> findByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
+        return incomeRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate)
+                .map(incomeEntityMapper::toModel);
     }
 }
