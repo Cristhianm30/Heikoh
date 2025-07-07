@@ -11,6 +11,7 @@ import io.github.cristhianm30.heikoh.domain.usecase.AuthUseCase;
 import io.github.cristhianm30.heikoh.domain.usecase.RegisterExpenseUseCase;
 import io.github.cristhianm30.heikoh.domain.usecase.RegisterIncomeUseCase;
 import io.github.cristhianm30.heikoh.domain.usecase.UserUseCase;
+import io.github.cristhianm30.heikoh.domain.usecase.GetTransactionsUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,5 +36,11 @@ public class DomainBeanConfig {
     public RegisterIncomeUseCase registerIncomeUseCase(IncomeRepositoryPort incomeRepositoryPort) {
         return new RegisterIncomeUseCase(incomeRepositoryPort);
     }
+
+    @Bean
+    public GetTransactionsUseCase getTransactionsUseCase(ExpenseRepositoryPort expenseRepositoryPort, IncomeRepositoryPort incomeRepositoryPort) {
+        return new GetTransactionsUseCase(expenseRepositoryPort, incomeRepositoryPort);
+    }
+
 
 }

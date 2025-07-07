@@ -10,4 +10,5 @@ public class PathConstant {
     public static final String COMPLETE_ACTUATOR = "/actuator/**";
     public static final String EXPENSE_REGISTER = "/api/v1/expense/register";
     public static final String INCOME_REGISTER = "/api/v1/income/register";
+    public static final String TRANSACTIONS = "/api/v1/transactions";
 }
