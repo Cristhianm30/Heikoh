@@ -18,4 +18,6 @@ public interface ExpenseRepository extends ReactiveCrudRepository<ExpenseEntity,
     @Query("SELECT SUM(amount) FROM expenses WHERE user_id = :userId AND transaction_date BETWEEN :startDate AND :endDate")
     Mono<BigDecimal> sumAmountByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
 
+    Mono<ExpenseEntity> findByIdAndUserId(Long id, Long userId);
+
 }

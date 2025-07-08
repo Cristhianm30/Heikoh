@@ -94,11 +94,28 @@ class UserPersistenceAdapterTest {
     }
 
     @Test
+    void findById_WhenUserNotExists_ShouldReturnEmpty() {
+        when(userRepository.findById(any(Long.class))).thenReturn(Mono.empty());
+
+        StepVerifier.create(userPersistenceAdapter.findById(1L))
+                .expectComplete();
+    }
+
+    @Test
     void existsByUsername_WhenUsernameExists_ShouldReturnTrue() {
         when(userRepository.existsByUsername(anyString())).thenReturn(Mono.just(true));
 
         StepVerifier.create(userPersistenceAdapter.existsByUsername("testuser"))
                 .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    void existsByUsername_WhenUsernameNotExists_ShouldReturnFalse() {
+        when(userRepository.existsByUsername(anyString())).thenReturn(Mono.just(false));
+
+        StepVerifier.create(userPersistenceAdapter.existsByUsername("nonexistent"))
+                .expectNext(false)
                 .verifyComplete();
     }
 
@@ -112,6 +129,15 @@ class UserPersistenceAdapterTest {
     }
 
     @Test
+    void existsByEmail_WhenEmailNotExists_ShouldReturnFalse() {
+        when(userRepository.existsByEmail(anyString())).thenReturn(Mono.just(false));
+
+        StepVerifier.create(userPersistenceAdapter.existsByEmail("nonexistent@example.com"))
+                .expectNext(false)
+                .verifyComplete();
+    }
+
+    @Test
     void findByUsernameOrEmail_WhenUserExists_ShouldReturnUser() {
         when(userRepository.findByUsernameOrEmail(anyString(), anyString()))
                 .thenReturn(Mono.just(testUserEntity));
@@ -120,5 +146,14 @@ class UserPersistenceAdapterTest {
         StepVerifier.create(userPersistenceAdapter.findByUsernameOrEmail("testuser", "test@example.com"))
                 .expectNext(testUserModel)
                 .verifyComplete();
+    }
+
+    @Test
+    void findByUsernameOrEmail_WhenUserNotExists_ShouldReturnEmpty() {
+        when(userRepository.findByUsernameOrEmail(anyString(), anyString()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userPersistenceAdapter.findByUsernameOrEmail("nonexistent", "nonexistent@example.com"))
+                .expectComplete();
     }
 }

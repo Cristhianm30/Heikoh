@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.TRANSACTIONS;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.*;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -20,6 +20,11 @@ public class TransactionRouter {
     @Bean
     public RouterFunction<ServerResponse> transactionRoutes() {
         return route(GET(TRANSACTIONS),
-                transactionHandler::getTransactions);
+                transactionHandler::getTransactions)
+                .andRoute(GET(TRANSACTION_DETAIL+TRANSACTION_ID_PATH),
+                        transactionHandler::getTransactionDetail)
+                ;
+
     }
+
 }

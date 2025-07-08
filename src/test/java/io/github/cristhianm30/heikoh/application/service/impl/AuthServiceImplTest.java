@@ -8,6 +8,7 @@ import io.github.cristhianm30.heikoh.application.mapper.AuthDtoMapper;
 import io.github.cristhianm30.heikoh.application.mapper.UserDtoMapper;
 import io.github.cristhianm30.heikoh.domain.exception.InvalidPasswordException;
 import io.github.cristhianm30.heikoh.domain.exception.UserNotEnabledException;
+import io.github.cristhianm30.heikoh.domain.exception.UserNotFoundException;
 import io.github.cristhianm30.heikoh.domain.model.LoginData;
 import io.github.cristhianm30.heikoh.domain.model.UserModel;
 import io.github.cristhianm30.heikoh.domain.port.in.AuthServicePort;
@@ -161,6 +162,17 @@ class AuthServiceImplTest {
 
         StepVerifier.create(authService.register(registerRequest))
                 .expectError(RuntimeException.class)
+                .verify();
+    }
+
+    @Test
+    void login_WithUserNotFound_ShouldThrowException() {
+        when(userServicePort.findByUsername(anyString())).thenReturn(Mono.empty());
+
+        StepVerifier.create(authService.login(loginRequest))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof UserNotFoundException &&
+                                "User not found".equals(throwable.getMessage()))
                 .verify();
     }
 }

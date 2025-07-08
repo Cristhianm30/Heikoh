@@ -18,4 +18,6 @@ public interface IncomeRepository extends ReactiveCrudRepository<IncomeEntity, L
     @Query("SELECT SUM(amount) FROM incomes WHERE user_id = :userId AND transaction_date BETWEEN :startDate AND :endDate")
     Mono<BigDecimal> sumAmountByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
 
+    Mono<IncomeEntity> findByIdAndUserId(Long id, Long userId);
+
 }

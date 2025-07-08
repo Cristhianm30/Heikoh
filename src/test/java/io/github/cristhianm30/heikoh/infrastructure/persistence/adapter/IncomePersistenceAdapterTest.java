@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -102,5 +103,43 @@ class IncomePersistenceAdapterTest {
         StepVerifier.create(incomePersistenceAdapter.sumAmountByUserIdAndDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
                 .expectNext(expectedSum)
                 .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfIncomeModels_WhenFound() {
+        when(incomeRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Flux.just(incomeEntity));
+        when(incomeEntityMapper.toModel(any(IncomeEntity.class))).thenReturn(incomeModel);
+
+        StepVerifier.create(incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
+                .expectNext(incomeModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnEmptyFlux_WhenNotFound() {
+        when(incomeRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Flux.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
+                .expectComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnIncomeModel_WhenFound() {
+        when(incomeRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.just(incomeEntity));
+        when(incomeEntityMapper.toModel(any(IncomeEntity.class))).thenReturn(incomeModel);
+
+        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(1L, 1L))
+                .expectNext(incomeModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnEmptyMono_WhenNotFound() {
+        when(incomeRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(1L, 1L))
+                .expectComplete();
     }
 }

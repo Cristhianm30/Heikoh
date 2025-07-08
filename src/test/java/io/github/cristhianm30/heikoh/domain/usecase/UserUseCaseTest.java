@@ -107,4 +107,28 @@ class UserUseCaseTest {
                                 user.getUsername().equals("testuser"))
                 .verifyComplete();
     }
+
+    @Test
+    void findByUsernameOrEmail_WhenUserNotExists_ShouldReturnEmptyMono() {
+        // Arrange
+        when(userRepositoryPort.findByUsernameOrEmail(anyString(), anyString()))
+                .thenReturn(Mono.empty());
+
+        // Act & Assert
+        StepVerifier.create(userUseCase.findByUsernameOrEmail("nonexistent", "nonexistent@example.com"))
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void save_WhenPersistenceFails_ShouldReturnError() {
+        // Arrange
+        when(userRepositoryPort.save(any(UserModel.class)))
+                .thenReturn(Mono.error(new RuntimeException("DB Error")));
+
+        // Act & Assert
+        StepVerifier.create(userUseCase.save(testUser))
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }
