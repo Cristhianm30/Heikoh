@@ -9,6 +9,9 @@ public class ExceptionConstants {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INCOME_NOT_REGISTERED = "The income could not be registered.";
     public static final String EXPENSE_NOT_REGISTERED = "The expense could not be registered.";
+    public static final String EXPENSE_NOT_FOUND = "Expense not found with id ";
+    public static final String INCOME_NOT_FOUND = "Income not found with id ";
+    public static final String INVALID_TRANSACTION_TYPE = "Invalid transaction type: ";
 
 
 }

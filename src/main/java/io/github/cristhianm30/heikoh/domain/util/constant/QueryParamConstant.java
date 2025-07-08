@@ -11,4 +11,5 @@ public class QueryParamConstant {
     public static final Integer INTEGER_NULL = null;
     public static final String STRING_NULL = null;
 
+
 }

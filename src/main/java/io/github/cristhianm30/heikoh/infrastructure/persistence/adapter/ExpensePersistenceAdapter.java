@@ -50,4 +50,10 @@ public class ExpensePersistenceAdapter implements ExpenseRepositoryPort {
         return expenseRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate)
                 .map(expenseEntityMapper::toModel);
     }
+
+    @Override
+    public Mono<ExpenseModel> findByIdAndUserId(Long id, Long userId) {
+        return expenseRepository.findByIdAndUserId(id, userId)
+                .map(expenseEntityMapper::toModel);
+    }
 }

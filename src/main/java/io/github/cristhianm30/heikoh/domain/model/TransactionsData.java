@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionData {
+public class TransactionsData {
     private Integer year;
     private Integer month;
     private Integer limit;

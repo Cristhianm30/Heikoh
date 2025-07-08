@@ -114,4 +114,16 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse));
     }
 
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleResourceNotFoundException(TransactionNotFoundException ex, ServerWebExchange exchange) {
+        log.warn(RESOURCE_NOT_FOUND, ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse));
+    }
+
 }

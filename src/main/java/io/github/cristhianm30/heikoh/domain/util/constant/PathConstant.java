@@ -11,4 +11,6 @@ public class PathConstant {
     public static final String EXPENSE_REGISTER = "/api/v1/expense/register";
     public static final String INCOME_REGISTER = "/api/v1/income/register";
     public static final String TRANSACTIONS = "/api/v1/transactions";
+    public static final String TRANSACTION_DETAIL = "/api/v1/transaction/details";
+    public static final String TRANSACTION_ID_PATH =  "/{transactionId}";
 }

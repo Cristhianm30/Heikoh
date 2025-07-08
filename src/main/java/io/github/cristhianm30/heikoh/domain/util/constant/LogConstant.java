@@ -13,6 +13,7 @@ public class LogConstant {
     public static final String USER_AUTHENTICATED_SUCCESSFULLY = "User authenticated successfully: {}";
     public static final String USER_NOT_FOUND_LOG = "User not found: {}";
     public static final String INVALID_PASSWORD_LOG = "Invalid password for user: {}";
+    public static final String RESOURCE_NOT_FOUND = "Transaction not found: {}";
 
 
 }

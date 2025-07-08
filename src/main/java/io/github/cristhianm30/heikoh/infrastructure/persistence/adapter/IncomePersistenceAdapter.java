@@ -50,4 +50,10 @@ public class IncomePersistenceAdapter implements IncomeRepositoryPort {
         return incomeRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate)
                 .map(incomeEntityMapper::toModel);
     }
+
+    @Override
+    public Mono<IncomeModel> findByIdAndUserId(Long id, Long userId) {
+        return incomeRepository.findByIdAndUserId(id, userId)
+                .map(incomeEntityMapper::toModel);
+    }
 }

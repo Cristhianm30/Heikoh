@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -104,5 +105,43 @@ class ExpensePersistenceAdapterTest {
         StepVerifier.create(expensePersistenceAdapter.sumAmountByUserIdAndDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
                 .expectNext(expectedSum)
                 .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfExpenseModels_WhenFound() {
+        when(expenseRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Flux.just(expenseEntity));
+        when(expenseEntityMapper.toModel(any(ExpenseEntity.class))).thenReturn(expenseModel);
+
+        StepVerifier.create(expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
+                .expectNext(expenseModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnEmptyFlux_WhenNotFound() {
+        when(expenseRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Flux.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
+                .expectComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnExpenseModel_WhenFound() {
+        when(expenseRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.just(expenseEntity));
+        when(expenseEntityMapper.toModel(any(ExpenseEntity.class))).thenReturn(expenseModel);
+
+        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(1L, 1L))
+                .expectNext(expenseModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnEmptyMono_WhenNotFound() {
+        when(expenseRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(1L, 1L))
+                .expectComplete();
     }
 }
