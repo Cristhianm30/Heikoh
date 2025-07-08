@@ -19,8 +19,6 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +39,7 @@ class TransactionServiceImplTest {
     private TransactionResponse expenseTransactionResponse;
     private TransactionResponse incomeTransactionResponse;
     private TransactionRequest transactionRequest;
+    private TransactionData transactionData;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +50,7 @@ class TransactionServiceImplTest {
                 .userId(userId)
                 .amount(BigDecimal.valueOf(50.00))
                 .description("Groceries")
-                .transactionDate(LocalDate.now().minusDays(1)) // Earlier date
+                .transactionDate(LocalDate.now().minusDays(1))
                 .build();
 
         incomeModel = IncomeModel.builder()
@@ -59,7 +58,7 @@ class TransactionServiceImplTest {
                 .userId(userId)
                 .amount(BigDecimal.valueOf(100.00))
                 .description("Salary")
-                .transactionDate(LocalDate.now()) // Later date
+                .transactionDate(LocalDate.now())
                 .build();
 
         expenseTransactionResponse = TransactionResponse.builder()
@@ -82,19 +81,29 @@ class TransactionServiceImplTest {
                 .limit(10)
                 .offset(0)
                 .build();
+        
+        transactionData = new TransactionData(
+                transactionRequest.getYear(),
+                transactionRequest.getMonth(),
+                transactionRequest.getLimit(),
+                transactionRequest.getOffset(),
+                transactionRequest.getType()
+        );
     }
 
     @Test
     void getTransactions_ShouldReturnMappedTransactions() {
-        when(getTransactionsServicePort.getTransactions(anyLong(), any(TransactionData.class)))
-                .thenReturn(Flux.just(incomeModel, expenseModel)); // Expected order: Income then Expense
-        when(transactionMapper.toTransactionResponse(any(ExpenseModel.class)))
-                .thenReturn(expenseTransactionResponse);
-        when(transactionMapper.toTransactionResponse(any(IncomeModel.class)))
-                .thenReturn(incomeTransactionResponse);
+        // Arrange
+        when(transactionMapper.toTransactionData(transactionRequest)).thenReturn(transactionData);
+        when(getTransactionsServicePort.getTransactions(userId, transactionData))
+                .thenReturn(Flux.just(incomeModel, expenseModel));
+        when(transactionMapper.toTransactionResponse(incomeModel)).thenReturn(incomeTransactionResponse);
+        when(transactionMapper.toTransactionResponse(expenseModel)).thenReturn(expenseTransactionResponse);
 
+        // Act & Assert
         StepVerifier.create(transactionService.getTransactions(userId, transactionRequest))
-                .expectNext(incomeTransactionResponse, expenseTransactionResponse)
+                .expectNext(incomeTransactionResponse)
+                .expectNext(expenseTransactionResponse)
                 .verifyComplete();
     }
 }
