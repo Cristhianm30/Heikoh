@@ -8,5 +8,12 @@ import reactor.core.publisher.Mono;
 
 public interface TransactionService {
     Flux<TransactionsResponse> getTransactions(Long userId, TransactionsRequest request);
+
     Mono<TransactionResponse> getTransactionDetail(Long userId, Long transactionId, String type);
+
+    Mono<TransactionResponse> updateTransaction(Long userId, Long transactionId, String type, Object updateRequest);
+
+    Mono<Void> deleteTransaction(Long userId, Long transactionId, String type);
+
+    Mono<TransactionResponse> registerTransaction(Long userId, String type, Object registerRequest);
 }

@@ -1,16 +1,19 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class PathConstant {
-    public static final String USER_REGISTER = "/api/v1/auth/register";
-    public static final String USER_LOGIN = "/api/v1/auth/login";
-    public static final String USER_PROFILE = "/api/v1/user/profile";
-    public static final String USER_UPDATE = "/api/v1/user/update";
-    public static final String USER_DELETE = "/api/v1/user/delete";
-    public static final String USER_LIST = "/api/v1/user/list";
+    public static final String API_V1 = "api/v1/";
+
+    public static final String AUTH_BASE_PATH = API_V1 + "auth/";
+    public static final String TRANSACTION_BASE_PATH = API_V1 + "transaction/";
+
+    public static final String AUTH_REGISTER_ENDPOINT_PATH = "register";
+    public static final String AUTH_LOGIN_ENDPOINT_PATH = "login";
+
+    public static final String TRANSACTION_LIST_ENDPOINT_PATH = "list";
+    public static final String TRANSACTION_DETAIL_ENDPOINT_PATH = "details/{transactionId}";
+    public static final String TRANSACTION_CREATE_ENDPOINT_PATH = "{type}";
+    public static final String TRANSACTION_UPDATE_ENDPOINT_PATH = "{type}/{transactionId}";
+    public static final String TRANSACTION_DELETE_ENDPOINT_PATH = "{type}/{transactionId}";
+
     public static final String COMPLETE_ACTUATOR = "/actuator/**";
-    public static final String EXPENSE_REGISTER = "/api/v1/expense/register";
-    public static final String INCOME_REGISTER = "/api/v1/income/register";
-    public static final String TRANSACTIONS = "/api/v1/transactions";
-    public static final String TRANSACTION_DETAIL = "/api/v1/transaction/details";
-    public static final String TRANSACTION_ID_PATH =  "/{transactionId}";
 }

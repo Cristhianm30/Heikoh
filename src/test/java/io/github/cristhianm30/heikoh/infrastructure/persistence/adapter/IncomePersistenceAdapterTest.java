@@ -142,4 +142,12 @@ class IncomePersistenceAdapterTest {
         StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(1L, 1L))
                 .expectComplete();
     }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully() {
+        when(incomeRepository.deleteByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.deleteByIdAndUserId(1L, 1L))
+                .expectComplete();
+    }
 }

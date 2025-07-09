@@ -8,10 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.USER_LOGIN;
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.USER_REGISTER;
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.*;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.path;
+import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -22,12 +22,13 @@ public class AuthRouter {
 
     @Bean
     public RouterFunction<ServerResponse> authRoutes() {
-        return route(POST(USER_REGISTER)
-                        .and(accept(MediaType.APPLICATION_JSON)),
-                authHandler::registerUser)
-                .andRoute(POST(USER_LOGIN)
-                                .and(accept(MediaType.APPLICATION_JSON)),
-                        authHandler::loginUser);
-
+        return nest(path(AUTH_BASE_PATH),
+                route()
+                        .POST(AUTH_REGISTER_ENDPOINT_PATH,
+                                accept(MediaType.APPLICATION_JSON), authHandler::registerUser)
+                        .POST(AUTH_LOGIN_ENDPOINT_PATH,
+                                accept(MediaType.APPLICATION_JSON), authHandler::loginUser)
+                        .build()
+        );
     }
 }

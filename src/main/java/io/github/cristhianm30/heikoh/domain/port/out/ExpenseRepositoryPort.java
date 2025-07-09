@@ -14,4 +14,5 @@ public interface ExpenseRepositoryPort {
     Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
     Flux<ExpenseModel> findByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
     Mono<ExpenseModel> findByIdAndUserId(Long id, Long userId);
+    Mono<Void> deleteByIdAndUserId(Long id, Long userId);
 }

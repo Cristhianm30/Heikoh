@@ -20,4 +20,6 @@ public interface IncomeRepository extends ReactiveCrudRepository<IncomeEntity, L
 
     Mono<IncomeEntity> findByIdAndUserId(Long id, Long userId);
 
+    Mono<Void> deleteByIdAndUserId(Long id, Long userId);
+
 }

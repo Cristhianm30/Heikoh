@@ -20,4 +20,6 @@ public interface ExpenseRepository extends ReactiveCrudRepository<ExpenseEntity,
 
     Mono<ExpenseEntity> findByIdAndUserId(Long id, Long userId);
 
+    Mono<Void> deleteByIdAndUserId(Long id, Long userId);
+
 }

@@ -144,4 +144,12 @@ class ExpensePersistenceAdapterTest {
         StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(1L, 1L))
                 .expectComplete();
     }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully() {
+        when(expenseRepository.deleteByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.deleteByIdAndUserId(1L, 1L))
+                .expectComplete();
+    }
 }
