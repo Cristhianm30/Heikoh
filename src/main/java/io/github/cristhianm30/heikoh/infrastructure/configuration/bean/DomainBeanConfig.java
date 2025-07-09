@@ -24,8 +24,8 @@ public class DomainBeanConfig {
     }
 
     @Bean
-    public TransactionUseCase getTransactionsUseCase(ExpenseRepositoryPort expenseRepositoryPort, IncomeRepositoryPort incomeRepositoryPort) {
-        return new TransactionUseCase(expenseRepositoryPort, incomeRepositoryPort);
+    public GetTransactionUseCase getTransactionsUseCase(ExpenseRepositoryPort expenseRepositoryPort, IncomeRepositoryPort incomeRepositoryPort) {
+        return new GetTransactionUseCase(expenseRepositoryPort, incomeRepositoryPort);
     }
 
 
@@ -47,7 +47,7 @@ public class DomainBeanConfig {
     public RegisterTransactionServicePort registerTransactionServicePort(
             ExpenseRepositoryPort expenseRepositoryPort,
             IncomeRepositoryPort incomeRepositoryPort) {
-        return new RegisterTransactionUseCase(expenseRepositoryPort, incomeRepositoryPort);
+        return new CreateTransactionUseCase(expenseRepositoryPort, incomeRepositoryPort);
     }
 
 

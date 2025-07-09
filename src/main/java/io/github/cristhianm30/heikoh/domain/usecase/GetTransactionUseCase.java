@@ -22,7 +22,7 @@ import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConsta
 import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_TRANSACTION_TYPE;
 
 @RequiredArgsConstructor
-public class TransactionUseCase implements TransactionServicePort {
+public class GetTransactionUseCase implements TransactionServicePort {
 
     private final ExpenseRepositoryPort expenseRepositoryPort;
     private final IncomeRepositoryPort incomeRepositoryPort;

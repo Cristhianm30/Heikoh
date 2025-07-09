@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RegisterTransactionUseCaseTest {
+class CreateGetTransactionUseCaseTest {
 
     @Mock
     private ExpenseRepositoryPort expenseRepositoryPort;
@@ -35,7 +34,7 @@ class RegisterTransactionUseCaseTest {
     private IncomeRepositoryPort incomeRepositoryPort;
 
     @InjectMocks
-    private RegisterTransactionUseCase registerTransactionUseCase;
+    private CreateTransactionUseCase createTransactionUseCase;
 
     private Long userId;
     private ExpenseModel expenseModel;
@@ -62,7 +61,7 @@ class RegisterTransactionUseCaseTest {
         when(expenseRepositoryPort.save(any(ExpenseModel.class)))
                 .thenReturn(Mono.just(expenseModel));
 
-        StepVerifier.create(registerTransactionUseCase.registerTransaction(userId, "expense", expenseModel))
+        StepVerifier.create(createTransactionUseCase.registerTransaction(userId, "expense", expenseModel))
                 .expectNextMatches(result -> {
                     ExpenseModel savedExpense = (ExpenseModel) result;
                     assertNotNull(savedExpense.getUserId());
@@ -87,7 +86,7 @@ class RegisterTransactionUseCaseTest {
         when(incomeRepositoryPort.save(any(IncomeModel.class)))
                 .thenReturn(Mono.just(incomeModel));
 
-        StepVerifier.create(registerTransactionUseCase.registerTransaction(userId, "income", incomeModel))
+        StepVerifier.create(createTransactionUseCase.registerTransaction(userId, "income", incomeModel))
                 .expectNextMatches(result -> {
                     IncomeModel savedIncome = (IncomeModel) result;
                     assertNotNull(savedIncome.getUserId());
@@ -109,7 +108,7 @@ class RegisterTransactionUseCaseTest {
     @Test
     @DisplayName("Should throw InvalidTransactionTypeException for invalid transaction type")
     void shouldThrowInvalidTransactionTypeExceptionForInvalidTransactionType() {
-        StepVerifier.create(registerTransactionUseCase.registerTransaction(userId, "invalid", expenseModel))
+        StepVerifier.create(createTransactionUseCase.registerTransaction(userId, "invalid", expenseModel))
                 .expectErrorMatches(throwable -> throwable instanceof InvalidTransactionTypeException &&
                         throwable.getMessage().contains("Invalid transaction type"))
                 .verify();

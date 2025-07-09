@@ -16,7 +16,7 @@ import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionCons
 import io.github.cristhianm30.heikoh.domain.exception.InvalidTransactionTypeException;
 
 @RequiredArgsConstructor
-public class RegisterTransactionUseCase implements RegisterTransactionServicePort {
+public class CreateTransactionUseCase implements RegisterTransactionServicePort {
 
     private final ExpenseRepositoryPort expenseRepositoryPort;
     private final IncomeRepositoryPort incomeRepositoryPort;

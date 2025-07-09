@@ -48,6 +48,36 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
+    @Override
+    public Mono<TransactionResponse> updateTransaction(Long userId, Long transactionId, String type, Object updateRequest) {
+        try {
+            Object model = mapRequestToModel(type, updateRequest);
+            return updateTransactionServicePort.updateTransaction(userId, transactionId, type, model)
+                    .map(this::mapToTransactionResponse);
+        } catch (InvalidTransactionTypeException e) {
+            return Mono.error(e);
+        }
+    }
+
+    @Override
+    public Mono<Void> deleteTransaction(Long userId, Long transactionId, String type) {
+        if (!TYPE_EXPENSE.equalsIgnoreCase(type) && !TYPE_INCOME.equalsIgnoreCase(type)) {
+            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type: " + type));
+        }
+        return deleteTransactionServicePort.deleteTransaction(userId, transactionId, type);
+    }
+
+    @Override
+    public Mono<TransactionResponse> registerTransaction(Long userId, String type, Object registerRequest) {
+        try {
+            Object model = mapRequestToModel(type, registerRequest);
+            return registerTransactionServicePort.registerTransaction(userId, type, model)
+                    .map(this::mapToTransactionResponse);
+        } catch (InvalidTransactionTypeException e) {
+            return Mono.error(e);
+        }
+    }
+
     private TransactionsResponse mapToTransactionsResponse(Object obj) {
         if (obj instanceof ExpenseModel) {
             return transactionMapper.toTransactionsResponse((ExpenseModel) obj);
@@ -81,36 +111,6 @@ public class TransactionServiceImpl implements TransactionService {
             }
         }
         throw new InvalidTransactionTypeException("Invalid request type for transaction.");
-    }
-
-    @Override
-    public Mono<TransactionResponse> updateTransaction(Long userId, Long transactionId, String type, Object updateRequest) {
-        try {
-            Object model = mapRequestToModel(type, updateRequest);
-            return updateTransactionServicePort.updateTransaction(userId, transactionId, type, model)
-                    .map(this::mapToTransactionResponse);
-        } catch (InvalidTransactionTypeException e) {
-            return Mono.error(e);
-        }
-    }
-
-    @Override
-    public Mono<Void> deleteTransaction(Long userId, Long transactionId, String type) {
-        if (!TYPE_EXPENSE.equalsIgnoreCase(type) && !TYPE_INCOME.equalsIgnoreCase(type)) {
-            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type: " + type));
-        }
-        return deleteTransactionServicePort.deleteTransaction(userId, transactionId, type);
-    }
-
-    @Override
-    public Mono<TransactionResponse> registerTransaction(Long userId, String type, Object registerRequest) {
-        try {
-            Object model = mapRequestToModel(type, registerRequest);
-            return registerTransactionServicePort.registerTransaction(userId, type, model)
-                    .map(this::mapToTransactionResponse);
-        } catch (InvalidTransactionTypeException e) {
-            return Mono.error(e);
-        }
     }
 }
 

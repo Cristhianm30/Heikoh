@@ -24,11 +24,10 @@ import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConsta
 import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_TRANSACTION_TYPE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionUseCaseTest {
+class GetTransactionUseCaseTest {
 
     @Mock
     private ExpenseRepositoryPort expenseRepositoryPort;
@@ -37,7 +36,7 @@ class TransactionUseCaseTest {
     private IncomeRepositoryPort incomeRepositoryPort;
 
     @InjectMocks
-    private TransactionUseCase getTransactionsUseCase;
+    private GetTransactionUseCase getTransactionsUseCase;
 
     private Long userId;
     private ExpenseModel expense1;
