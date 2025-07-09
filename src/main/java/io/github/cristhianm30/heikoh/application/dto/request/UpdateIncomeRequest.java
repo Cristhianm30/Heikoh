@@ -15,4 +15,6 @@ public class UpdateIncomeRequest {
     private String description;
     private LocalDate transactionDate;
     private String source;
+    private String origin;
+
 }

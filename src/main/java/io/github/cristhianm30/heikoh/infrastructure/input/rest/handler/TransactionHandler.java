@@ -16,6 +16,7 @@ import reactor.util.function.Tuples;
 import io.github.cristhianm30.heikoh.domain.exception.InvalidTransactionTypeException;
 
 import java.net.URI;
+import java.util.function.Function;
 
 import static io.github.cristhianm30.heikoh.domain.util.constant.PathVariableConstant.TRANSACTION_ID;
 import static io.github.cristhianm30.heikoh.domain.util.constant.QueryParamConstant.*;
@@ -29,113 +30,94 @@ public class TransactionHandler {
     private final TransactionService transactionService;
     private final ValidateRequest validateRequest;
 
-    private Mono<?> extractRequestBodyMono(ServerRequest request, String type, Class<?> expenseClass, Class<?> incomeClass) {
-        if (TYPE_EXPENSE.equalsIgnoreCase(type)) {
-            return request.bodyToMono(expenseClass);
-        } else if (TYPE_INCOME.equalsIgnoreCase(type)) {
-            return request.bodyToMono(incomeClass);
-        } else {
-            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type in path"));
-        }
-    }
-
-    private Mono<Tuple2<Object, AuthenticatedUser>> processTransactionRequest(ServerRequest request, String type, Class<?> expenseClass, Class<?> incomeClass) {
-        return extractRequestBodyMono(request, type, expenseClass, incomeClass)
-                .doOnNext(validateRequest::validate)
-                .zipWith(request.principal())
-                .flatMap(tuple -> {
-                    Object dto = tuple.getT1();
-                    AuthenticatedUser user = (AuthenticatedUser) ((Authentication) tuple.getT2()).getPrincipal();
-                    return Mono.just(Tuples.of(dto, user));
-                });
-    }
-
     public Mono<ServerResponse> getTransactions(ServerRequest request) {
-        return request.principal()
-                .cast(Authentication.class)
-                .map(Authentication::getPrincipal)
-                .cast(AuthenticatedUser.class)
-                .flatMapMany(authenticatedUser -> {
-                    Long userId = authenticatedUser.getId();
-                    TransactionsRequest transactionsRequest = TransactionsRequest.builder()
-                            .year(request.queryParam(YEAR).map(Integer::parseInt).orElse(INTEGER_NULL))
-                            .month(request.queryParam(MONTH).map(Integer::parseInt).orElse(INTEGER_NULL))
-                            .limit(request.queryParam(LIMIT).map(Integer::parseInt).orElse(DEFAULT_LIMIT))
-                            .offset(request.queryParam(OFFSET).map(Integer::parseInt).orElse(DEFAULT_OFFSET))
-                            .type(request.queryParam(TYPE).orElse(STRING_NULL))
-                            .build();
-                    validateRequest.validate(transactionsRequest);
-                    return transactionService.getTransactions(userId, transactionsRequest);
-                })
-                .collectList()
-                .flatMap(transactionResponses -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(transactionResponses));
+        return withAuthenticatedUser(request, user ->
+                request.bind(TransactionsRequest.class)
+                        .doOnNext(validateRequest::validate)
+                        .flatMapMany(req -> transactionService.getTransactions(user.getId(), req))
+                        .collectList()
+                        .flatMap(response -> ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(response))
+        );
     }
 
     public Mono<ServerResponse> getTransactionDetail(ServerRequest request) {
-        return request.principal()
-                .cast(Authentication.class)
-                .map(Authentication::getPrincipal)
-                .cast(AuthenticatedUser.class)
-                .flatMap(authenticatedUser -> {
-                    Long userId = authenticatedUser.getId();
-                    Long transactionId = Long.parseLong(request.pathVariable(TRANSACTION_ID));
-                    String type = request.queryParam(TYPE).orElse(STRING_NULL);
-                    return transactionService.getTransactionDetail(userId, transactionId, type);
-                })
-                .flatMap(transactionResponse -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(transactionResponse))
-                .switchIfEmpty(ServerResponse.notFound().build());
+        return withAuthenticatedUser(request, user -> {
+            Long transactionId = Long.parseLong(request.pathVariable(TRANSACTION_ID));
+            String type = request.queryParam(TYPE)
+                    .orElseThrow(() -> new IllegalArgumentException("Query param 'type' is required."));
+
+            return transactionService.getTransactionDetail(user.getId(), transactionId, type)
+                    .flatMap(response -> ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(response))
+                    .switchIfEmpty(ServerResponse.notFound().build());
+        });
     }
 
     public Mono<ServerResponse> registerTransaction(ServerRequest request) {
         String type = request.pathVariable(TYPE);
+        Mono<?> dtoMono = getDtoMono(request, type, RegisterExpenseRequest.class, RegisterIncomeRequest.class);
 
-        return processTransactionRequest(request, type, RegisterExpenseRequest.class, RegisterIncomeRequest.class)
-                .flatMap(tuple -> {
-                    Object dto = tuple.getT1();
-                    AuthenticatedUser user = tuple.getT2();
-                    return transactionService.registerTransaction(user.getId(), type, dto);
-                })
-                .flatMap(response -> ServerResponse
-                        .created(URI.create(String.format("/api/v1/transactions/%s/%d", type, response.getId())))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(response))
-                .onErrorResume(InvalidTransactionTypeException.class, e ->
-                        ServerResponse.badRequest().bodyValue(e.getMessage()));
+        return withAuthenticatedUser(request, user ->
+                dtoMono
+                        .doOnNext(validateRequest::validate)
+                        .flatMap(dto -> transactionService.registerTransaction(user.getId(), type, dto))
+                        .flatMap(response -> ServerResponse
+                                .created(URI.create(String.format("/api/v1/transactions/%s/%d", type, response.getId())))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(response))
+        ).onErrorResume(InvalidTransactionTypeException.class, e ->
+                ServerResponse.badRequest().bodyValue(e.getMessage()));
     }
 
     public Mono<ServerResponse> updateTransaction(ServerRequest request) {
         String type = request.pathVariable(TYPE);
         Long transactionId = Long.valueOf(request.pathVariable(TRANSACTION_ID));
+        Mono<?> dtoMono = getDtoMono(request, type, UpdateExpenseRequest.class, UpdateIncomeRequest.class);
 
-        return processTransactionRequest(request, type, UpdateExpenseRequest.class, UpdateIncomeRequest.class)
-                .flatMap(tuple -> {
-                    Object dto = tuple.getT1();
-                    AuthenticatedUser user = tuple.getT2();
-                    return transactionService.updateTransaction(user.getId(), transactionId, type, dto);
-                })
-                .flatMap(response -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(response))
-                .switchIfEmpty(ServerResponse.notFound().build())
-                .onErrorResume(InvalidTransactionTypeException.class, e ->
-                        ServerResponse.badRequest().bodyValue(e.getMessage()));
+        return withAuthenticatedUser(request, user ->
+                dtoMono
+                        .doOnNext(validateRequest::validate)
+                        .flatMap(dto -> transactionService.updateTransaction(user.getId(), transactionId, type, dto))
+                        .flatMap(response -> ServerResponse.ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValue(response))
+                        .switchIfEmpty(ServerResponse.notFound().build())
+        ).onErrorResume(InvalidTransactionTypeException.class, e ->
+                ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
+
+    public Mono<ServerResponse> deleteTransaction(ServerRequest request) {
+        return withAuthenticatedUser(request, user -> {
+            String type = request.pathVariable(TYPE);
+            Long transactionId = Long.valueOf(request.pathVariable(TRANSACTION_ID));
+            return transactionService.deleteTransaction(user.getId(), transactionId, type)
+                    .then(ServerResponse.noContent().build());
+        });
+    }
+
+    // --- MÉTODOS PRIVADOS DE AYUDA ---
+
+    private Mono<ServerResponse> withAuthenticatedUser(ServerRequest request,
+                                                       Function<AuthenticatedUser, Mono<ServerResponse>> action) {
+        return request.principal()
+                .cast(Authentication.class)
+                .map(Authentication::getPrincipal)
+                .cast(AuthenticatedUser.class)
+                .flatMap(action);
     }
 
 
-    public Mono<ServerResponse> deleteTransaction(ServerRequest request) {
-        String type = request.pathVariable(TYPE);
-        Long transactionId = Long.valueOf(request.pathVariable(TRANSACTION_ID));
-
-        return request.principal()
-                .flatMap(principal -> {
-                    AuthenticatedUser user = (AuthenticatedUser) ((Authentication) principal).getPrincipal();
-                    return transactionService.deleteTransaction(user.getId(), transactionId, type);
-                })
-                .then(ServerResponse.noContent().build());
+    private Mono<?> getDtoMono(ServerRequest request, String type, Class<?> expenseClass, Class<?> incomeClass) {
+        if (TYPE_EXPENSE.equalsIgnoreCase(type)) {
+            return request.bodyToMono(expenseClass);
+        } else if (TYPE_INCOME.equalsIgnoreCase(type)) {
+            return request.bodyToMono(incomeClass);
+        } else {
+            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type in path: " + type));
+        }
     }
 
 }
