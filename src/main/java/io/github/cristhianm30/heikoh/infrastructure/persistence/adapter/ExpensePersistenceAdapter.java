@@ -56,4 +56,9 @@ public class ExpensePersistenceAdapter implements ExpenseRepositoryPort {
         return expenseRepository.findByIdAndUserId(id, userId)
                 .map(expenseEntityMapper::toModel);
     }
+
+    @Override
+    public Mono<Void> deleteByIdAndUserId(Long id, Long userId) {
+        return expenseRepository.deleteByIdAndUserId(id, userId);
+    }
 }

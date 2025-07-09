@@ -90,6 +90,18 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse));
     }
 
+    @ExceptionHandler(InvalidTransactionTypeException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleInvalidTransactionTypeException(InvalidTransactionTypeException ex, ServerWebExchange exchange) {
+        log.warn("Invalid transaction type: {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse));
+    }
+
     @ExceptionHandler(IncomeNotRegisteredException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleIncomeNotRegisteredException(IncomeNotRegisteredException ex, ServerWebExchange exchange) {
         log.error(INCOME_REGISTRATION_FAILED, ex.getMessage());

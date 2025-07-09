@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers(HttpMethod.POST, USER_LOGIN, USER_REGISTER).permitAll()
+                        .pathMatchers(HttpMethod.POST, AUTH_BASE_PATH+ AUTH_LOGIN_ENDPOINT_PATH, AUTH_BASE_PATH+AUTH_REGISTER_ENDPOINT_PATH).permitAll()
                         .pathMatchers(COMPLETE_ACTUATOR).permitAll()
                         .anyExchange().authenticated()
                 )

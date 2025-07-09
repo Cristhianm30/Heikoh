@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.USER_REGISTER;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class AuthHandler {
                 .flatMap(authService::register)
                 .flatMap(userResponse -> ServerResponse.status(HttpStatus.CREATED)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .location(URI.create(USER_REGISTER + userResponse.getId()))
+                        .location(URI.create(AUTH_BASE_PATH + AUTH_REGISTER_ENDPOINT_PATH + userResponse.getId()))
                         .bodyValue(userResponse));
     }
 

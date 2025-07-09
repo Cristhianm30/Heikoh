@@ -9,11 +9,14 @@ import io.github.cristhianm30.heikoh.domain.model.TransactionsData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface TransactionMapper {
 
     @Mapping(target = "type", constant = "Gasto")
@@ -35,6 +38,14 @@ public interface TransactionMapper {
     @Mapping(target = "date", source = "transactionDate")
     @Mapping(target = "amount", source = "amount", qualifiedByName = "roundAmount")
     TransactionResponse toTransactionResponse(IncomeModel incomeModel);
+
+    ExpenseModel toExpenseModel(io.github.cristhianm30.heikoh.application.dto.request.RegisterExpenseRequest request);
+
+    ExpenseModel toExpenseModel(io.github.cristhianm30.heikoh.application.dto.request.UpdateExpenseRequest request);
+
+    IncomeModel toIncomeModel(io.github.cristhianm30.heikoh.application.dto.request.RegisterIncomeRequest request);
+
+    IncomeModel toIncomeModel(io.github.cristhianm30.heikoh.application.dto.request.UpdateIncomeRequest request);
 
     @Named("roundAmount")
     default BigDecimal roundAmount(BigDecimal value) {

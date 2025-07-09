@@ -56,4 +56,9 @@ public class IncomePersistenceAdapter implements IncomeRepositoryPort {
         return incomeRepository.findByIdAndUserId(id, userId)
                 .map(incomeEntityMapper::toModel);
     }
+
+    @Override
+    public Mono<Void> deleteByIdAndUserId(Long id, Long userId) {
+        return incomeRepository.deleteByIdAndUserId(id,userId);
+    }
 }

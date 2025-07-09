@@ -2,10 +2,7 @@ package io.github.cristhianm30.heikoh.application.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +11,8 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class IncomeRequest {
+@Builder
+public class RegisterIncomeRequest {
     @NotNull(message = "The amount cannot be null")
     private BigDecimal amount;
     @NotBlank(message = "The description cannot be blank")
