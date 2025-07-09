@@ -12,6 +12,7 @@ public interface IncomeRepositoryPort {
     Mono<IncomeModel> findById(Long id);
     Mono<Void> deleteById(Long id);
     Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
+    Mono<BigDecimal> sumAmountByUserId(Long userId);
     Flux<IncomeModel> findByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
     Mono<IncomeModel> findByIdAndUserId(Long id, Long userId);
     Mono<Void> deleteByIdAndUserId(Long id, Long userId);

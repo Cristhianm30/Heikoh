@@ -42,7 +42,14 @@ public class ExpensePersistenceAdapter implements ExpenseRepositoryPort {
 
     @Override
     public Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
-        return expenseRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+        return expenseRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate)
+                .defaultIfEmpty(BigDecimal.ZERO);
+    }
+
+    @Override
+    public Mono<BigDecimal> sumAmountByUserId(Long userId) {
+        return expenseRepository.sumAmountByUserId(userId)
+                .defaultIfEmpty(BigDecimal.ZERO);
     }
 
     @Override

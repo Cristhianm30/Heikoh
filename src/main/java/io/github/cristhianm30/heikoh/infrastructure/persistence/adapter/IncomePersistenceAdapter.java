@@ -42,7 +42,14 @@ public class IncomePersistenceAdapter implements IncomeRepositoryPort {
 
     @Override
     public Mono<BigDecimal> sumAmountByUserIdAndDateBetween(Long userId, LocalDate startDate, LocalDate endDate) {
-        return incomeRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+        return incomeRepository.sumAmountByUserIdAndTransactionDateBetween(userId, startDate, endDate)
+                .defaultIfEmpty(BigDecimal.ZERO);
+    }
+
+    @Override
+    public Mono<BigDecimal> sumAmountByUserId(Long userId) {
+        return incomeRepository.sumAmountByUserId(userId)
+                .defaultIfEmpty(BigDecimal.ZERO);
     }
 
     @Override
