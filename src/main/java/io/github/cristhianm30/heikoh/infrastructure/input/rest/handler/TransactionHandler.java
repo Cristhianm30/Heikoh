@@ -18,6 +18,9 @@ import io.github.cristhianm30.heikoh.domain.exception.InvalidTransactionTypeExce
 import java.net.URI;
 import java.util.function.Function;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_TRANSACTION_TYPE_IN_PATH;
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.QUERY_PARAM_TYPE_REQUIRED;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.TRANSACTION_URI_FORMAT;
 import static io.github.cristhianm30.heikoh.domain.util.constant.PathVariableConstant.TRANSACTION_ID;
 import static io.github.cristhianm30.heikoh.domain.util.constant.QueryParamConstant.*;
 import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionConstant.TYPE_EXPENSE;
@@ -46,7 +49,7 @@ public class TransactionHandler {
         return withAuthenticatedUser(request, user -> {
             Long transactionId = Long.parseLong(request.pathVariable(TRANSACTION_ID));
             String type = request.queryParam(TYPE)
-                    .orElseThrow(() -> new IllegalArgumentException("Query param 'type' is required."));
+                    .orElseThrow(() -> new IllegalArgumentException(QUERY_PARAM_TYPE_REQUIRED));
 
             return transactionService.getTransactionDetail(user.getId(), transactionId, type)
                     .flatMap(response -> ServerResponse.ok()
@@ -65,7 +68,7 @@ public class TransactionHandler {
                         .doOnNext(validateRequest::validate)
                         .flatMap(dto -> transactionService.registerTransaction(user.getId(), type, dto))
                         .flatMap(response -> ServerResponse
-                                .created(URI.create(String.format("/api/v1/transactions/%s/%d", type, response.getId())))
+                                .created(URI.create(String.format(TRANSACTION_URI_FORMAT, type, response.getId())))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(response))
         ).onErrorResume(InvalidTransactionTypeException.class, e ->
@@ -116,7 +119,7 @@ public class TransactionHandler {
         } else if (TYPE_INCOME.equalsIgnoreCase(type)) {
             return request.bodyToMono(incomeClass);
         } else {
-            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type in path: " + type));
+            return Mono.error(new InvalidTransactionTypeException(INVALID_TRANSACTION_TYPE_IN_PATH + type));
         }
     }
 

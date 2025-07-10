@@ -1,7 +1,7 @@
 package io.github.cristhianm30.heikoh.domain.usecase;
 
 import io.github.cristhianm30.heikoh.domain.model.FinancialSummaryData;
-import io.github.cristhianm30.heikoh.domain.port.in.DashboardServicePort;
+import io.github.cristhianm30.heikoh.domain.port.in.GetFinancialSummaryServicePort;
 import io.github.cristhianm30.heikoh.domain.port.out.ExpenseRepositoryPort;
 import io.github.cristhianm30.heikoh.domain.port.out.IncomeRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
-public class GetFinancialSummaryUseCase implements DashboardServicePort {
+public class GetFinancialSummaryUseCase implements GetFinancialSummaryServicePort {
 
     private final ExpenseRepositoryPort expenseRepositoryPort;
     private final IncomeRepositoryPort incomeRepositoryPort;

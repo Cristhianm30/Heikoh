@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.UNEXPECTED_ERROR_TRY_AGAIN;
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.*;
 import static io.github.cristhianm30.heikoh.domain.util.constant.LogConstant.*;
 
 @Slf4j
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTransactionTypeException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleInvalidTransactionTypeException(InvalidTransactionTypeException ex, ServerWebExchange exchange) {
-        log.warn("Invalid transaction type: {}", ex.getMessage());
+        log.warn(INVALID_TRANSACTION_TYPE + "{}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .exceptionName(ex.getClass().getSimpleName())
                 .errorMessage(ex.getMessage())
@@ -140,7 +140,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidDateRangeException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleInvalidDateRangeException(InvalidDateRangeException ex, ServerWebExchange exchange) {
-        log.warn("Invalid date range: {}", ex.getMessage());
+        log.warn(INVALID_DATE_RANGE + ": {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse));
+    }
+
+    @ExceptionHandler(InvalidGroupByException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleInvalidGroupByException(InvalidGroupByException ex, ServerWebExchange exchange) {
+        log.warn(INVALID_GROUP_BY_PARAMETER + ": {}", ex.getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .exceptionName(ex.getClass().getSimpleName())
                 .errorMessage(ex.getMessage())
