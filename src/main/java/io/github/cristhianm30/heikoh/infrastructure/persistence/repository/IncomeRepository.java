@@ -9,16 +9,19 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.QueryConstant.SELECT_SUM_AMOUNT_FROM_INCOMES_WHERE_USER_ID;
+import static io.github.cristhianm30.heikoh.domain.util.constant.QueryConstant.SELECT_SUM_AMOUNT_FROM_INCOMES_WHERE_USER_ID_AND_TRANSACTION_DATE_BETWEEN;
+
 public interface IncomeRepository extends ReactiveCrudRepository<IncomeEntity, Long> {
 
     Flux<IncomeEntity> findByUserId(Long userId);
 
     Flux<IncomeEntity> findByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
 
-    @Query("SELECT SUM(amount) FROM incomes WHERE user_id = :userId AND transaction_date BETWEEN :startDate AND :endDate")
+    @Query(SELECT_SUM_AMOUNT_FROM_INCOMES_WHERE_USER_ID_AND_TRANSACTION_DATE_BETWEEN)
     Mono<BigDecimal> sumAmountByUserIdAndTransactionDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
 
-    @Query("SELECT SUM(amount) FROM incomes WHERE user_id = :userId")
+    @Query(SELECT_SUM_AMOUNT_FROM_INCOMES_WHERE_USER_ID)
     Mono<BigDecimal> sumAmountByUserId(Long userId);
 
     Mono<IncomeEntity> findByIdAndUserId(Long id, Long userId);

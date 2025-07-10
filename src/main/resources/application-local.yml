@@ -25,3 +25,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web.reactive: DEBUG
+    io.r2dbc.spi: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    io.github.cristhianm30.heikoh: DEBUG

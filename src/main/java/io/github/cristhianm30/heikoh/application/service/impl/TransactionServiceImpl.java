@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_REQUEST_TYPE_FOR_TRANSACTION;
+import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_TRANSACTION_TYPE;
 import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionConstant.TYPE_EXPENSE;
 import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionConstant.TYPE_INCOME;
 
@@ -62,7 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Mono<Void> deleteTransaction(Long userId, Long transactionId, String type) {
         if (!TYPE_EXPENSE.equalsIgnoreCase(type) && !TYPE_INCOME.equalsIgnoreCase(type)) {
-            return Mono.error(new InvalidTransactionTypeException("Invalid transaction type: " + type));
+            return Mono.error(new InvalidTransactionTypeException(INVALID_TRANSACTION_TYPE + type));
         }
         return deleteTransactionServicePort.deleteTransaction(userId, transactionId, type);
     }
@@ -110,7 +112,7 @@ public class TransactionServiceImpl implements TransactionService {
                 return transactionMapper.toIncomeModel((UpdateIncomeRequest) request);
             }
         }
-        throw new InvalidTransactionTypeException("Invalid request type for transaction.");
+        throw new InvalidTransactionTypeException(INVALID_REQUEST_TYPE_FOR_TRANSACTION);
     }
 }
 

@@ -51,10 +51,16 @@ public class DomainBeanConfig {
     }
 
     @Bean
-    public DashboardServicePort dashboardServicePort(
+    public GetFinancialSummaryServicePort getFinancialSummaryServicePort(
             ExpenseRepositoryPort expenseRepositoryPort,
             IncomeRepositoryPort incomeRepositoryPort) {
         return new GetFinancialSummaryUseCase(expenseRepositoryPort, incomeRepositoryPort);
+    }
+
+    @Bean
+    public GetExpenseAggregationServicePort getExpenseAggregationServicePort(
+            ExpenseRepositoryPort expenseRepositoryPort) {
+        return new GetExpenseAggregationUseCase(expenseRepositoryPort);
     }
 
 }

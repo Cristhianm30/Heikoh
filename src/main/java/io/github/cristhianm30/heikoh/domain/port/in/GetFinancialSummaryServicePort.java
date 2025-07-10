@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
-public interface DashboardServicePort {
+public interface GetFinancialSummaryServicePort {
     Mono<FinancialSummaryData> getFinancialSummary(Long userId, LocalDate startDate, LocalDate endDate);
 }
