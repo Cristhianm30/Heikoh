@@ -1,6 +1,6 @@
 package io.github.cristhianm30.heikoh.domain.port.out;
 
-import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.model.ExpenseModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,11 +25,11 @@ public interface ExpenseRepositoryPort {
 
     Mono<Void> deleteByIdAndUserId(Long id, Long userId);
 
-    Flux<ExpenseAggregationData> sumAmountByUserIdAndDateBetweenByCategory(Long userId, LocalDate startDate, LocalDate endDate);
+    Flux<AggregationData> sumAmountByUserIdAndDateBetweenByCategory(Long userId, LocalDate startDate, LocalDate endDate);
 
-    Flux<ExpenseAggregationData> sumAmountByUserIdByCategory(Long userId);
+    Flux<AggregationData> sumAmountByUserIdByCategory(Long userId);
 
-    Flux<ExpenseAggregationData> sumAmountByUserIdAndDateBetweenByPaymentMethod(Long userId, LocalDate startDate, LocalDate endDate);
+    Flux<AggregationData> sumAmountByUserIdAndDateBetweenByPaymentMethod(Long userId, LocalDate startDate, LocalDate endDate);
 
-    Flux<ExpenseAggregationData> sumAmountByUserIdByPaymentMethod(Long userId);
+    Flux<AggregationData> sumAmountByUserIdByPaymentMethod(Long userId);
 }

@@ -5,27 +5,26 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class ExpenseAggregationDataTest {
+class AggregationDataTest {
 
     @Test
-    void testExpenseAggregationDataCreation() {
+    void testAggregationDataCreation() {
         String key = "Food";
         BigDecimal totalAmount = new BigDecimal("150.75");
 
-        ExpenseAggregationData data = new ExpenseAggregationData(key, totalAmount);
+        AggregationData data = new AggregationData(key, totalAmount);
 
         assertEquals(key, data.getKey());
         assertEquals(totalAmount, data.getTotalAmount());
     }
 
     @Test
-    void testExpenseAggregationDataBuilder() {
+    void testAggregationDataBuilder() {
         String key = "Utilities";
         BigDecimal totalAmount = new BigDecimal("200.00");
 
-        ExpenseAggregationData data = ExpenseAggregationData.builder()
+        AggregationData data = AggregationData.builder()
                 .key(key)
                 .totalAmount(totalAmount)
                 .build();
@@ -33,5 +32,5 @@ class ExpenseAggregationDataTest {
         assertEquals(key, data.getKey());
         assertEquals(totalAmount, data.getTotalAmount());
     }
-
 }
+

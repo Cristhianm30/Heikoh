@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpenseAggregationResponse {
+public class AggregationResponse {
     private String key;
     private BigDecimal totalAmount;
 }

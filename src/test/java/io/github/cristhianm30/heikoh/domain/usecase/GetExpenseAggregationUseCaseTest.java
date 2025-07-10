@@ -1,7 +1,7 @@
 package io.github.cristhianm30.heikoh.domain.usecase;
 
 import io.github.cristhianm30.heikoh.domain.exception.InvalidGroupByException;
-import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.port.out.ExpenseRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,15 +40,15 @@ class GetExpenseAggregationUseCaseTest {
         LocalDate endDate = LocalDate.of(2024, 1, 31);
         String groupBy = "category";
 
-        List<ExpenseAggregationData> expectedData = Arrays.asList(
-                new ExpenseAggregationData("Food", new BigDecimal("100.00")),
-                new ExpenseAggregationData("Transport", new BigDecimal("50.00"))
+        List<AggregationData> expectedData = Arrays.asList(
+                new AggregationData("Food", new BigDecimal("100.00")),
+                new AggregationData("Transport", new BigDecimal("50.00"))
         );
 
         when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByCategory(eq(userId), eq(startDate), eq(endDate)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
-        Flux<ExpenseAggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
+        Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
 
         StepVerifier.create(result)
                 .expectNextSequence(expectedData)
@@ -60,15 +60,15 @@ class GetExpenseAggregationUseCaseTest {
         Long userId = 1L;
         String groupBy = "category";
 
-        List<ExpenseAggregationData> expectedData = Arrays.asList(
-                new ExpenseAggregationData("Food", new BigDecimal("200.00")),
-                new ExpenseAggregationData("Transport", new BigDecimal("100.00"))
+        List<AggregationData> expectedData = Arrays.asList(
+                new AggregationData("Food", new BigDecimal("200.00")),
+                new AggregationData("Transport", new BigDecimal("100.00"))
         );
 
         when(expenseRepositoryPort.sumAmountByUserIdByCategory(eq(userId)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
-        Flux<ExpenseAggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);
+        Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);
 
         StepVerifier.create(result)
                 .expectNextSequence(expectedData)
@@ -82,15 +82,15 @@ class GetExpenseAggregationUseCaseTest {
         LocalDate endDate = LocalDate.of(2024, 1, 31);
         String groupBy = "paymentMethod";
 
-        List<ExpenseAggregationData> expectedData = Arrays.asList(
-                new ExpenseAggregationData("Credit Card", new BigDecimal("150.00")),
-                new ExpenseAggregationData("Cash", new BigDecimal("75.00"))
+        List<AggregationData> expectedData = Arrays.asList(
+                new AggregationData("Credit Card", new BigDecimal("150.00")),
+                new AggregationData("Cash", new BigDecimal("75.00"))
         );
 
         when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByPaymentMethod(eq(userId), eq(startDate), eq(endDate)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
-        Flux<ExpenseAggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
+        Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
 
         StepVerifier.create(result)
                 .expectNextSequence(expectedData)
@@ -102,15 +102,15 @@ class GetExpenseAggregationUseCaseTest {
         Long userId = 1L;
         String groupBy = "paymentMethod";
 
-        List<ExpenseAggregationData> expectedData = Arrays.asList(
-                new ExpenseAggregationData("Credit Card", new BigDecimal("300.00")),
-                new ExpenseAggregationData("Cash", new BigDecimal("150.00"))
+        List<AggregationData> expectedData = Arrays.asList(
+                new AggregationData("Credit Card", new BigDecimal("300.00")),
+                new AggregationData("Cash", new BigDecimal("150.00"))
         );
 
         when(expenseRepositoryPort.sumAmountByUserIdByPaymentMethod(eq(userId)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
-        Flux<ExpenseAggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);
+        Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);
 
         StepVerifier.create(result)
                 .expectNextSequence(expectedData)
@@ -124,7 +124,7 @@ class GetExpenseAggregationUseCaseTest {
         LocalDate endDate = LocalDate.of(2024, 1, 31);
         String groupBy = "invalid";
 
-        Flux<ExpenseAggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
+        Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof InvalidGroupByException &&

@@ -63,4 +63,10 @@ public class DomainBeanConfig {
         return new GetExpenseAggregationUseCase(expenseRepositoryPort);
     }
 
+    @Bean
+    public GetIncomeAggregationServicePort getIncomeAggregationServicePort(
+            IncomeRepositoryPort incomeRepositoryPort) {
+        return new GetIncomeAggregationUseCase(incomeRepositoryPort);
+    }
+
 }

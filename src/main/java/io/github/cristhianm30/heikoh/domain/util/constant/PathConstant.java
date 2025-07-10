@@ -19,5 +19,6 @@ public class PathConstant {
     public static final String DASHBOARD_BASE_PATH = API_V1 + "dashboard";
     public static final String DASHBOARD_SUMMARY_PATH = "/summary";
     public static final String DASHBOARD_EXPENSES_SUMMARY_BY_PATH = "/expenses/summary-by";
+    public static final String DASHBOARD_INCOMES_SUMMARY_BY_PATH = "/incomes/summary-by";
     public static final String TRANSACTION_URI_FORMAT = API_V1 + "transactions/%s/%d";
 }

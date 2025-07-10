@@ -1,7 +1,7 @@
 package io.github.cristhianm30.heikoh.domain.usecase;
 
 import io.github.cristhianm30.heikoh.domain.exception.InvalidGroupByException;
-import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.port.in.GetExpenseAggregationServicePort;
 import io.github.cristhianm30.heikoh.domain.port.out.ExpenseRepositoryPort;
 import io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants;
@@ -19,7 +19,7 @@ public class GetExpenseAggregationUseCase implements GetExpenseAggregationServic
     private final ExpenseRepositoryPort expenseRepositoryPort;
 
     @Override
-    public Flux<ExpenseAggregationData> getExpenseAggregation(Long userId, LocalDate startDate, LocalDate endDate, String groupBy) {
+    public Flux<AggregationData> getExpenseAggregation(Long userId, LocalDate startDate, LocalDate endDate, String groupBy) {
         if (QueryConstant.CATEGORY_FIELD.equalsIgnoreCase(groupBy)) {
             if (startDate != null && endDate != null) {
                 return expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByCategory(userId, startDate, endDate);

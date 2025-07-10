@@ -1,8 +1,8 @@
 package io.github.cristhianm30.heikoh.application.mapper;
 
-import io.github.cristhianm30.heikoh.application.dto.response.ExpenseAggregationResponse;
+import io.github.cristhianm30.heikoh.application.dto.response.AggregationResponse;
 import io.github.cristhianm30.heikoh.application.dto.response.FinancialSummaryResponse;
-import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.model.FinancialSummaryData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,7 +24,7 @@ public interface IDashboardMapper {
     FinancialSummaryResponse toFinancialSummaryResponse(FinancialSummaryData data);
 
     @Mapping(target = "totalAmount", source = "totalAmount", qualifiedByName = "roundAmount")
-    ExpenseAggregationResponse toExpenseAggregationResponse(ExpenseAggregationData data);
+    AggregationResponse toAggregationResponse(AggregationData data);
 
     @Named("roundAmount")
     default BigDecimal roundAmount(BigDecimal value) {

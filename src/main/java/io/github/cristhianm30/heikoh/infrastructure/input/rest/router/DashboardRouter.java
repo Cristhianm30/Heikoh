@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_BASE_PATH;
 import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_EXPENSES_SUMMARY_BY_PATH;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_INCOMES_SUMMARY_BY_PATH;
 import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_SUMMARY_PATH;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
@@ -29,6 +30,7 @@ public class DashboardRouter {
                 route()
                         .GET(DASHBOARD_SUMMARY_PATH, accept(MediaType.APPLICATION_JSON), dashboardHandler::getFinancialSummary)
                         .GET(DASHBOARD_EXPENSES_SUMMARY_BY_PATH, accept(MediaType.APPLICATION_JSON), dashboardHandler::getExpenseAggregation)
+                        .GET(DASHBOARD_INCOMES_SUMMARY_BY_PATH, accept(MediaType.APPLICATION_JSON), dashboardHandler::getIncomeAggregation)
                         .build()
         );
     }

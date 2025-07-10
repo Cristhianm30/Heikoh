@@ -1,12 +1,13 @@
 package io.github.cristhianm30.heikoh.application.service.impl;
 
-import io.github.cristhianm30.heikoh.application.dto.response.ExpenseAggregationResponse;
+import io.github.cristhianm30.heikoh.application.dto.response.AggregationResponse;
 import io.github.cristhianm30.heikoh.application.dto.response.FinancialSummaryResponse;
 import io.github.cristhianm30.heikoh.application.mapper.IDashboardMapper;
-import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.model.FinancialSummaryData;
 import io.github.cristhianm30.heikoh.domain.port.in.GetExpenseAggregationServicePort;
 import io.github.cristhianm30.heikoh.domain.port.in.GetFinancialSummaryServicePort;
+import io.github.cristhianm30.heikoh.domain.port.in.GetIncomeAggregationServicePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +33,10 @@ class DashboardServiceImplTest {
 
     @Mock
     private GetExpenseAggregationServicePort getExpenseAggregationServicePort;
+
+    @Mock
+    private GetIncomeAggregationServicePort getIncomeAggregationServicePort;
+
 
     @Mock
     private IDashboardMapper dashboardMapper;
@@ -79,20 +84,55 @@ class DashboardServiceImplTest {
         LocalDate endDate = LocalDate.of(2024, 1, 31);
         String groupBy = "category";
 
-        ExpenseAggregationData data1 = new ExpenseAggregationData("Food", new BigDecimal("100.00"));
-        ExpenseAggregationData data2 = new ExpenseAggregationData("Transport", new BigDecimal("50.00"));
-        List<ExpenseAggregationData> dataList = Arrays.asList(data1, data2);
+        AggregationData data1 = new AggregationData("Food", new BigDecimal("100.00"));
+        AggregationData data2 = new AggregationData("Transport", new BigDecimal("50.00"));
+        List<AggregationData> dataList = Arrays.asList(data1, data2);
 
-        ExpenseAggregationResponse response1 = new ExpenseAggregationResponse("Food", new BigDecimal("100.00"));
-        ExpenseAggregationResponse response2 = new ExpenseAggregationResponse("Transport", new BigDecimal("50.00"));
-        List<ExpenseAggregationResponse> responseList = Arrays.asList(response1, response2);
+        AggregationResponse response1 = new AggregationResponse("Food", new BigDecimal("100.00"));
+        AggregationResponse response2 = new AggregationResponse("Transport", new BigDecimal("50.00"));
+        List<AggregationResponse> responseList = Arrays.asList(response1, response2);
 
         when(getExpenseAggregationServicePort.getExpenseAggregation(eq(userId), eq(startDate), eq(endDate), eq(groupBy)))
                 .thenReturn(Flux.fromIterable(dataList));
-        when(dashboardMapper.toExpenseAggregationResponse(data1)).thenReturn(response1);
-        when(dashboardMapper.toExpenseAggregationResponse(data2)).thenReturn(response2);
+        when(dashboardMapper.toAggregationResponse(any(AggregationData.class)))
+                .thenAnswer(invocation -> {
+                    AggregationData arg = invocation.getArgument(0);
+                    if (arg.getKey().equals("Food")) return response1;
+                    if (arg.getKey().equals("Transport")) return response2;
+                    return null;
+                });
 
-        Flux<ExpenseAggregationResponse> result = dashboardService.getExpenseAggregation(userId, startDate, endDate, groupBy);
+        Flux<AggregationResponse> result = dashboardService.getExpenseAggregation(userId, startDate, endDate, groupBy);
+
+        StepVerifier.create(result)
+                .expectNext(response1, response2)
+                .verifyComplete();
+    }
+
+    @Test
+    void getIncomeAggregation_shouldReturnMappedResponse() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+
+        AggregationData data1 = new AggregationData("Salary", new BigDecimal("1000.00"));
+        AggregationData data2 = new AggregationData("Freelance", new BigDecimal("500.00"));
+        List<AggregationData> dataList = Arrays.asList(data1, data2);
+
+        AggregationResponse response1 = new AggregationResponse("Salary", new BigDecimal("1000.00"));
+        AggregationResponse response2 = new AggregationResponse("Freelance", new BigDecimal("500.00"));
+
+        when(getIncomeAggregationServicePort.getIncomeAggregation(eq(userId), eq(startDate), eq(endDate)))
+                .thenReturn(Flux.fromIterable(dataList));
+        when(dashboardMapper.toAggregationResponse(any(AggregationData.class)))
+                .thenAnswer(invocation -> {
+                    AggregationData arg = invocation.getArgument(0);
+                    if (arg.getKey().equals("Salary")) return response1;
+                    if (arg.getKey().equals("Freelance")) return response2;
+                    return null;
+                });
+
+        Flux<AggregationResponse> result = dashboardService.getIncomeAggregation(userId, startDate, endDate);
 
         StepVerifier.create(result)
                 .expectNext(response1, response2)
