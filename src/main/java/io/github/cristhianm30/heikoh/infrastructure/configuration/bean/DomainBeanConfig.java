@@ -50,5 +50,11 @@ public class DomainBeanConfig {
         return new CreateTransactionUseCase(expenseRepositoryPort, incomeRepositoryPort);
     }
 
+    @Bean
+    public DashboardServicePort dashboardServicePort(
+            ExpenseRepositoryPort expenseRepositoryPort,
+            IncomeRepositoryPort incomeRepositoryPort) {
+        return new GetFinancialSummaryUseCase(expenseRepositoryPort, incomeRepositoryPort);
+    }
 
 }

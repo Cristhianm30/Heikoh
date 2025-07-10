@@ -108,6 +108,27 @@ class ExpensePersistenceAdapterTest {
     }
 
     @Test
+    void sumAmountByUserId_ShouldReturnBigDecimal() {
+        BigDecimal expectedSum = BigDecimal.valueOf(200.00);
+        when(expenseRepository.sumAmountByUserId(anyLong()))
+                .thenReturn(Mono.just(expectedSum));
+
+        StepVerifier.create(expensePersistenceAdapter.sumAmountByUserId(1L))
+                .expectNext(expectedSum)
+                .verifyComplete();
+    }
+
+    @Test
+    void sumAmountByUserId_ShouldReturnZeroWhenNoExpenses() {
+        when(expenseRepository.sumAmountByUserId(anyLong()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.sumAmountByUserId(1L))
+                .expectNext(BigDecimal.ZERO)
+                .verifyComplete();
+    }
+
+    @Test
     void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfExpenseModels_WhenFound() {
         when(expenseRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(Flux.just(expenseEntity));

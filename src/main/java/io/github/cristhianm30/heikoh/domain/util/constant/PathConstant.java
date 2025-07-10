@@ -16,4 +16,5 @@ public class PathConstant {
     public static final String TRANSACTION_DELETE_ENDPOINT_PATH = "{type}/{transactionId}";
 
     public static final String COMPLETE_ACTUATOR = "/actuator/**";
+    public static final String DASHBOARD_BASE_PATH = API_V1 + "dashboard";
 }

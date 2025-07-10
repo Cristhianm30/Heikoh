@@ -106,6 +106,27 @@ class IncomePersistenceAdapterTest {
     }
 
     @Test
+    void sumAmountByUserId_ShouldReturnBigDecimal() {
+        BigDecimal expectedSum = BigDecimal.valueOf(300.00);
+        when(incomeRepository.sumAmountByUserId(anyLong()))
+                .thenReturn(Mono.just(expectedSum));
+
+        StepVerifier.create(incomePersistenceAdapter.sumAmountByUserId(1L))
+                .expectNext(expectedSum)
+                .verifyComplete();
+    }
+
+    @Test
+    void sumAmountByUserId_ShouldReturnZeroWhenNoIncomes() {
+        when(incomeRepository.sumAmountByUserId(anyLong()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.sumAmountByUserId(1L))
+                .expectNext(BigDecimal.ZERO)
+                .verifyComplete();
+    }
+
+    @Test
     void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfIncomeModels_WhenFound() {
         when(incomeRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(Flux.just(incomeEntity));

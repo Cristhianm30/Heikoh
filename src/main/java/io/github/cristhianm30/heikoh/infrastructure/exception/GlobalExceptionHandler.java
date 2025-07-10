@@ -138,4 +138,16 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse));
     }
 
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleInvalidDateRangeException(InvalidDateRangeException ex, ServerWebExchange exchange) {
+        log.warn("Invalid date range: {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionName(ex.getClass().getSimpleName())
+                .errorMessage(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse));
+    }
+
 }
