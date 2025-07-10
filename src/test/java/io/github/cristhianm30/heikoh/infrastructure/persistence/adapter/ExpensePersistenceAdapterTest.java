@@ -1,6 +1,8 @@
 package io.github.cristhianm30.heikoh.infrastructure.persistence.adapter;
 
+import io.github.cristhianm30.heikoh.domain.model.ExpenseAggregationData;
 import io.github.cristhianm30.heikoh.domain.model.ExpenseModel;
+import io.github.cristhianm30.heikoh.infrastructure.entity.ExpenseAggregationResult;
 import io.github.cristhianm30.heikoh.infrastructure.entity.ExpenseEntity;
 import io.github.cristhianm30.heikoh.infrastructure.mapper.ExpenseEntityMapper;
 import io.github.cristhianm30.heikoh.infrastructure.persistence.repository.ExpenseRepository;
@@ -10,12 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -97,80 +101,146 @@ class ExpensePersistenceAdapterTest {
     }
 
     @Test
-    void sumAmountByUserIdAndDateBetween_ShouldReturnBigDecimal() {
-        BigDecimal expectedSum = BigDecimal.valueOf(150.00);
-        when(expenseRepository.sumAmountByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Mono.just(expectedSum));
+    void sumAmountByUserIdAndDateBetweenByCategory_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Food", new BigDecimal("100.00")),
+                new ExpenseAggregationResult("Transport", new BigDecimal("50.00"))
+        );
+        when(expenseRepository.sumAmountByUserIdAndTransactionDateBetweenByCategory(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.sumAmountByUserIdAndDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
-                .expectNext(expectedSum)
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdAndDateBetweenByCategory(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Food") && data.getTotalAmount().compareTo(new BigDecimal("100.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Transport") && data.getTotalAmount().compareTo(new BigDecimal("50.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void sumAmountByUserId_ShouldReturnBigDecimal() {
-        BigDecimal expectedSum = BigDecimal.valueOf(200.00);
-        when(expenseRepository.sumAmountByUserId(anyLong()))
-                .thenReturn(Mono.just(expectedSum));
+    void sumAmountByUserIdByCategory_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Food", new BigDecimal("200.00")),
+                new ExpenseAggregationResult("Transport", new BigDecimal("100.00"))
+        );
+        when(expenseRepository.sumAmountByUserIdByCategory(userId))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.sumAmountByUserId(1L))
-                .expectNext(expectedSum)
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdByCategory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Food") && data.getTotalAmount().compareTo(new BigDecimal("200.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Transport") && data.getTotalAmount().compareTo(new BigDecimal("100.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void sumAmountByUserId_ShouldReturnZeroWhenNoExpenses() {
-        when(expenseRepository.sumAmountByUserId(anyLong()))
-                .thenReturn(Mono.empty());
+    void sumAmountByUserIdAndDateBetweenByPaymentMethod_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Credit Card", new BigDecimal("150.00")),
+                new ExpenseAggregationResult("Cash", new BigDecimal("75.00"))
+        );
+        when(expenseRepository.sumAmountByUserIdAndTransactionDateBetweenByPaymentMethod(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.sumAmountByUserId(1L))
-                .expectNext(BigDecimal.ZERO)
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdAndDateBetweenByPaymentMethod(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Credit Card") && data.getTotalAmount().compareTo(new BigDecimal("150.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Cash") && data.getTotalAmount().compareTo(new BigDecimal("75.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfExpenseModels_WhenFound() {
-        when(expenseRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Flux.just(expenseEntity));
-        when(expenseEntityMapper.toModel(any(ExpenseEntity.class))).thenReturn(expenseModel);
+    void sumAmountByUserIdByPaymentMethod_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Credit Card", new BigDecimal("300.00")),
+                new ExpenseAggregationResult("Cash", new BigDecimal("150.00"))
+        );
+        when(expenseRepository.sumAmountByUserIdByPaymentMethod(userId))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
-                .expectNext(expenseModel)
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdByPaymentMethod(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Credit Card") && data.getTotalAmount().compareTo(new BigDecimal("300.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Cash") && data.getTotalAmount().compareTo(new BigDecimal("150.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void findByUserIdAndTransactionDateBetween_ShouldReturnEmptyFlux_WhenNotFound() {
-        when(expenseRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Flux.empty());
+    void sumAmountByUserIdAndDateBetweenByCategory_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Food", null)
+        );
+        when(expenseRepository.sumAmountByUserIdAndTransactionDateBetweenByCategory(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
-                .expectComplete();
-    }
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdAndDateBetweenByCategory(userId, startDate, endDate);
 
-    @Test
-    void findByIdAndUserId_ShouldReturnExpenseModel_WhenFound() {
-        when(expenseRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.just(expenseEntity));
-        when(expenseEntityMapper.toModel(any(ExpenseEntity.class))).thenReturn(expenseModel);
-
-        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(1L, 1L))
-                .expectNext(expenseModel)
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Food") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void findByIdAndUserId_ShouldReturnEmptyMono_WhenNotFound() {
-        when(expenseRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+    void sumAmountByUserIdByCategory_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Food", null)
+        );
+        when(expenseRepository.sumAmountByUserIdByCategory(userId))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(1L, 1L))
-                .expectComplete();
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdByCategory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Food") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
     }
 
     @Test
-    void deleteByIdAndUserId_ShouldCompleteSuccessfully() {
-        when(expenseRepository.deleteByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+    void sumAmountByUserIdAndDateBetweenByPaymentMethod_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Credit Card", null)
+        );
+        when(expenseRepository.sumAmountByUserIdAndTransactionDateBetweenByPaymentMethod(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(expensePersistenceAdapter.deleteByIdAndUserId(1L, 1L))
-                .expectComplete();
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdAndDateBetweenByPaymentMethod(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Credit Card") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
+    }
+
+    @Test
+    void sumAmountByUserIdByPaymentMethod_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        List<ExpenseAggregationResult> results = Arrays.asList(
+                new ExpenseAggregationResult("Credit Card", null)
+        );
+        when(expenseRepository.sumAmountByUserIdByPaymentMethod(userId))
+                .thenReturn(Flux.fromIterable(results));
+
+        Flux<ExpenseAggregationData> result = expensePersistenceAdapter.sumAmountByUserIdByPaymentMethod(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Credit Card") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
     }
 }
