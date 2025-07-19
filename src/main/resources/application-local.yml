@@ -1,19 +1,18 @@
 server:
   port: ${SERVER_PORT}
-  servlet:
-    context-path: /api
+
 
 spring:
   config:
     activate:
       on-profile: local
   r2dbc:
-    url: ${DB_LOCAL_R2DBC_URL}
+    url: r2dbc:mysql://${DB_LOCAL_R2DBC_URL}:${DB_LOCAL_PORT}/${DB_LOCAL_NAME}
     username: ${DB_LOCAL_USERNAME}
     password: ${DB_LOCAL_PASSWORD}
   sql:
     init:
-      mode: always
+      mode: never
 
 security:
   jwt:

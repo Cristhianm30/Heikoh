@@ -56,6 +56,7 @@ public class AuthUseCase implements AuthServicePort {
                         .email(authenticatedUser.getEmail())
                         .enabled(authenticatedUser.getEnabled())
                         .role(authenticatedUser.getRole())
+                        .createdAt(authenticatedUser.getCreatedAt())
                         .build());
     }
 
