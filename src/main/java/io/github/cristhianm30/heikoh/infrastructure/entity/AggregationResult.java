@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpenseAggregationResult {
+public class AggregationResult {
     private String key;
     @Column("total_amount")
     private BigDecimal totalAmount;

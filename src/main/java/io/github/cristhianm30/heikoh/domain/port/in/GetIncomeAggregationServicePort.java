@@ -5,6 +5,6 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
 
-public interface GetExpenseAggregationServicePort {
-    Flux<AggregationData> getExpenseAggregation(Long userId, LocalDate startDate, LocalDate endDate, String groupBy);
+public interface GetIncomeAggregationServicePort {
+    Flux<AggregationData> getIncomeAggregation(Long userId, LocalDate startDate, LocalDate endDate);
 }

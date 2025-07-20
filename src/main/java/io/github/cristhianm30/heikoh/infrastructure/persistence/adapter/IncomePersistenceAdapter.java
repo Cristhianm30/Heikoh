@@ -1,8 +1,10 @@
 package io.github.cristhianm30.heikoh.infrastructure.persistence.adapter;
 
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.model.IncomeModel;
 import io.github.cristhianm30.heikoh.domain.port.out.IncomeRepositoryPort;
 import io.github.cristhianm30.heikoh.infrastructure.entity.IncomeEntity;
+import io.github.cristhianm30.heikoh.infrastructure.entity.AggregationResult;
 import io.github.cristhianm30.heikoh.infrastructure.mapper.IncomeEntityMapper;
 import io.github.cristhianm30.heikoh.infrastructure.persistence.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +69,21 @@ public class IncomePersistenceAdapter implements IncomeRepositoryPort {
     @Override
     public Mono<Void> deleteByIdAndUserId(Long id, Long userId) {
         return incomeRepository.deleteByIdAndUserId(id,userId);
+    }
+
+    @Override
+    public Flux<AggregationData> sumAmountByUserIdAndDateBetweenByOrigin(Long userId, LocalDate startDate, LocalDate endDate) {
+        return incomeRepository.sumAmountByUserIdAndTransactionDateBetweenByOrigin(userId, startDate, endDate)
+                .map(this::mapToAggregationData);
+    }
+
+    @Override
+    public Flux<AggregationData> sumAmountByUserIdByOrigin(Long userId) {
+        return incomeRepository.sumAmountByUserIdByOrigin(userId)
+                .map(this::mapToAggregationData);
+    }
+
+    private AggregationData mapToAggregationData(AggregationResult result) {
+        return new AggregationData(result.getKey(), result.getTotalAmount() != null ? result.getTotalAmount() : BigDecimal.ZERO);
     }
 }

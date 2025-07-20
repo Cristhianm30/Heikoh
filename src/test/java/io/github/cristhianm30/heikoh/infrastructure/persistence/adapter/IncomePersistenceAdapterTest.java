@@ -1,6 +1,8 @@
 package io.github.cristhianm30.heikoh.infrastructure.persistence.adapter;
 
+import io.github.cristhianm30.heikoh.domain.model.AggregationData;
 import io.github.cristhianm30.heikoh.domain.model.IncomeModel;
+import io.github.cristhianm30.heikoh.infrastructure.entity.AggregationResult;
 import io.github.cristhianm30.heikoh.infrastructure.entity.IncomeEntity;
 import io.github.cristhianm30.heikoh.infrastructure.mapper.IncomeEntityMapper;
 import io.github.cristhianm30.heikoh.infrastructure.persistence.repository.IncomeRepository;
@@ -10,12 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -96,7 +100,7 @@ class IncomePersistenceAdapterTest {
 
     @Test
     void sumAmountByUserIdAndDateBetween_ShouldReturnBigDecimal() {
-        BigDecimal expectedSum = BigDecimal.valueOf(200.00);
+        BigDecimal expectedSum = BigDecimal.valueOf(150.00);
         when(incomeRepository.sumAmountByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(Mono.just(expectedSum));
 
@@ -106,8 +110,18 @@ class IncomePersistenceAdapterTest {
     }
 
     @Test
+    void sumAmountByUserIdAndDateBetween_ShouldReturnZeroWhenNoIncomes() {
+        when(incomeRepository.sumAmountByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.sumAmountByUserIdAndDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
+                .expectNext(BigDecimal.ZERO)
+                .verifyComplete();
+    }
+
+    @Test
     void sumAmountByUserId_ShouldReturnBigDecimal() {
-        BigDecimal expectedSum = BigDecimal.valueOf(300.00);
+        BigDecimal expectedSum = BigDecimal.valueOf(200.00);
         when(incomeRepository.sumAmountByUserId(anyLong()))
                 .thenReturn(Mono.just(expectedSum));
 
@@ -127,48 +141,74 @@ class IncomePersistenceAdapterTest {
     }
 
     @Test
-    void findByUserIdAndTransactionDateBetween_ShouldReturnFluxOfIncomeModels_WhenFound() {
-        when(incomeRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Flux.just(incomeEntity));
-        when(incomeEntityMapper.toModel(any(IncomeEntity.class))).thenReturn(incomeModel);
+    void sumAmountByUserIdAndDateBetweenByOrigin_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<AggregationResult> results = Arrays.asList(
+                new AggregationResult("Salary", new BigDecimal("1000.00")),
+                new AggregationResult("Freelance", new BigDecimal("500.00"))
+        );
+        when(incomeRepository.sumAmountByUserIdAndTransactionDateBetweenByOrigin(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
-                .expectNext(incomeModel)
+        Flux<AggregationData> result = incomePersistenceAdapter.sumAmountByUserIdAndDateBetweenByOrigin(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Salary") && data.getTotalAmount().compareTo(new BigDecimal("1000.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Freelance") && data.getTotalAmount().compareTo(new BigDecimal("500.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void findByUserIdAndTransactionDateBetween_ShouldReturnEmptyFlux_WhenNotFound() {
-        when(incomeRepository.findByUserIdAndTransactionDateBetween(anyLong(), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Flux.empty());
+    void sumAmountByUserIdByOrigin_ShouldReturnAggregatedData() {
+        Long userId = 1L;
+        List<AggregationResult> results = Arrays.asList(
+                new AggregationResult("Salary", new BigDecimal("2000.00")),
+                new AggregationResult("Freelance", new BigDecimal("1000.00"))
+        );
+        when(incomeRepository.sumAmountByUserIdByOrigin(userId))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(1L, LocalDate.now().minusDays(7), LocalDate.now()))
-                .expectComplete();
-    }
+        Flux<AggregationData> result = incomePersistenceAdapter.sumAmountByUserIdByOrigin(userId);
 
-    @Test
-    void findByIdAndUserId_ShouldReturnIncomeModel_WhenFound() {
-        when(incomeRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.just(incomeEntity));
-        when(incomeEntityMapper.toModel(any(IncomeEntity.class))).thenReturn(incomeModel);
-
-        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(1L, 1L))
-                .expectNext(incomeModel)
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Salary") && data.getTotalAmount().compareTo(new BigDecimal("2000.00")) == 0)
+                .expectNextMatches(data -> data.getKey().equals("Freelance") && data.getTotalAmount().compareTo(new BigDecimal("1000.00")) == 0)
                 .verifyComplete();
     }
 
     @Test
-    void findByIdAndUserId_ShouldReturnEmptyMono_WhenNotFound() {
-        when(incomeRepository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+    void sumAmountByUserIdAndDateBetweenByOrigin_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        List<AggregationResult> results = Arrays.asList(
+                new AggregationResult("Salary", null)
+        );
+        when(incomeRepository.sumAmountByUserIdAndTransactionDateBetweenByOrigin(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(1L, 1L))
-                .expectComplete();
+        Flux<AggregationData> result = incomePersistenceAdapter.sumAmountByUserIdAndDateBetweenByOrigin(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Salary") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
     }
 
     @Test
-    void deleteByIdAndUserId_ShouldCompleteSuccessfully() {
-        when(incomeRepository.deleteByIdAndUserId(anyLong(), anyLong())).thenReturn(Mono.empty());
+    void sumAmountByUserIdByOrigin_ShouldHandleNullTotalAmount() {
+        Long userId = 1L;
+        List<AggregationResult> results = Arrays.asList(
+                new AggregationResult("Salary", null)
+        );
+        when(incomeRepository.sumAmountByUserIdByOrigin(userId))
+                .thenReturn(Flux.fromIterable(results));
 
-        StepVerifier.create(incomePersistenceAdapter.deleteByIdAndUserId(1L, 1L))
-                .expectComplete();
+        Flux<AggregationData> result = incomePersistenceAdapter.sumAmountByUserIdByOrigin(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(data -> data.getKey().equals("Salary") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
     }
 }

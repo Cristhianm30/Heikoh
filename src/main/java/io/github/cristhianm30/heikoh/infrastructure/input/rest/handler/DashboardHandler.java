@@ -70,6 +70,27 @@ public class DashboardHandler {
         );
     }
 
+    public Mono<ServerResponse> getIncomeAggregation(ServerRequest request) {
+        LocalDate startDate = request.queryParam(START_DATE)
+                .map(this::parseDate)
+                .orElse(null);
+        LocalDate endDate = request.queryParam(END_DATE)
+                .map(this::parseDate)
+                .orElse(null);
+
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            return Mono.error(new InvalidDateRangeException(INVALID_DATE_RANGE));
+        }
+
+        return withAuthenticatedUser(request, user ->
+                dashboardService.getIncomeAggregation(user.getId(), startDate, endDate)
+                        .collectList()
+                        .flatMap(response -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(response))
+                        .onErrorResume(DateTimeParseException.class, e ->
+                                Mono.error(new InvalidDateRangeException(INVALID_DATE_FORMAT)))
+        );
+    }
+
     private LocalDate parseDate(String dateString) {
         return LocalDate.parse(dateString);
     }
