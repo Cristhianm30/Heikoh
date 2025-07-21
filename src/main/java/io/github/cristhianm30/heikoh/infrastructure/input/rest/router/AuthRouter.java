@@ -28,6 +28,8 @@ public class AuthRouter {
                                 accept(MediaType.APPLICATION_JSON), authHandler::registerUser)
                         .POST(AUTH_LOGIN_ENDPOINT_PATH,
                                 accept(MediaType.APPLICATION_JSON), authHandler::loginUser)
+                        .GET(AUTH_REFRESH_ENDPOINT_PATH,
+                                accept(MediaType.APPLICATION_JSON), authHandler::refreshToken)
                         .build()
         );
     }

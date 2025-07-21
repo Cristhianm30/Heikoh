@@ -12,4 +12,6 @@ public interface AuthService {
 
     Mono<LoginResponse> login(LoginRequest request);
 
+    Mono<LoginResponse> refresh(String username);
+
 }

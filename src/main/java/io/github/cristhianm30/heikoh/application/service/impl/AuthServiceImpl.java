@@ -79,5 +79,11 @@ public class AuthServiceImpl implements AuthService {
                 });
     }
 
+    @Override
+    public Mono<LoginResponse> refresh(String username) {
+        return authServicePort.refreshToken(username)
+                .map(authDtoMapper::toLoginResponse);
+    }
+
 
 }

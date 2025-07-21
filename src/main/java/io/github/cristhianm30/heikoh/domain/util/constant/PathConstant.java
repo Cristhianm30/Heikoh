@@ -8,6 +8,7 @@ public class PathConstant {
 
     public static final String AUTH_REGISTER_ENDPOINT_PATH = "register";
     public static final String AUTH_LOGIN_ENDPOINT_PATH = "login";
+    public static final String AUTH_REFRESH_ENDPOINT_PATH = "refresh";
 
     public static final String TRANSACTION_LIST_ENDPOINT_PATH = "list";
     public static final String TRANSACTION_DETAIL_ENDPOINT_PATH = "details/{transactionId}";

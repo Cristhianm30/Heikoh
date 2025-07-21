@@ -42,5 +42,13 @@ public class AuthHandler {
                         .bodyValue(loginResponse));
     }
 
+    public Mono<ServerResponse> refreshToken(ServerRequest request) {
+        return request.principal()
+                .flatMap(principal -> authService.refresh(principal.getName()))
+                .flatMap(loginResponse -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(loginResponse));
+    }
+
 
 }

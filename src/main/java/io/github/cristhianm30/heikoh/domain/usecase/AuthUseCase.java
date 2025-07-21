@@ -60,5 +60,11 @@ public class AuthUseCase implements AuthServicePort {
                         .build());
     }
 
+    @Override
+    public Mono<LoginData> refreshToken(String username) {
+        return userServicePort.findByUsername(username)
+                .flatMap(this::loginUser);
+    }
+
 
 }
