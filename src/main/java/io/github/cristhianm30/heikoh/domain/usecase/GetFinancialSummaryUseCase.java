@@ -10,6 +10,9 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionConstant.EARLIEST_DATE;
+import static io.github.cristhianm30.heikoh.domain.util.constant.TransactionConstant.LASTEST_DATE;
+
 @RequiredArgsConstructor
 public class GetFinancialSummaryUseCase implements GetFinancialSummaryServicePort {
 
@@ -24,6 +27,16 @@ public class GetFinancialSummaryUseCase implements GetFinancialSummaryServicePor
         if (startDate != null && endDate != null) {
             totalIncomeMono = incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, endDate);
             totalExpenseMono = expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, endDate);
+        }else if (startDate != null) {
+            LocalDate lastestDate = LASTEST_DATE;
+            totalIncomeMono = incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate);
+            totalExpenseMono = expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate);
+
+        }else if (endDate != null) {
+            LocalDate earliestDate= EARLIEST_DATE;
+            totalIncomeMono = incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate);
+            totalExpenseMono = expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate);
+
         } else {
             totalIncomeMono = incomeRepositoryPort.sumAmountByUserId(userId);
             totalExpenseMono = expenseRepositoryPort.sumAmountByUserId(userId);
