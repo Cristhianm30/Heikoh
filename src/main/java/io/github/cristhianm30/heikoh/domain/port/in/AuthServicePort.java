@@ -7,4 +7,5 @@ import reactor.core.publisher.Mono;
 public interface AuthServicePort {
     Mono<UserModel> registerUser(UserModel userToRegister);
     Mono<LoginData> loginUser(UserModel userModel);
+    Mono<LoginData> refreshToken(String username);
 }
