@@ -22,4 +22,18 @@ public class PathConstant {
     public static final String DASHBOARD_EXPENSES_SUMMARY_BY_PATH = "/expenses/summary-by";
     public static final String DASHBOARD_INCOMES_SUMMARY_BY_PATH = "/incomes/summary-by";
     public static final String TRANSACTION_URI_FORMAT = API_V1 + "transactions/%s/%d";
+
+    public static final String HTTP_GET = "GET";
+    public static final String HTTP_POST = "POST";
+    public static final String HTTP_PUT = "PUT";
+    public static final String HTTP_DELETE = "DELETE";
+    public static final String HTTP_OPTIONS = "OPTIONS";
+    public static final String HTTP_PATCH = "PATCH";
+
+    public static final String ALLOWED_HEADERS = "*";
+    public static final String ALLOWED_ALL_PATH = "/**";
+
+
+    public static final String AUTHORIZATION = "Authorization";
+
 }

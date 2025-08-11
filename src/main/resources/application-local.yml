@@ -19,6 +19,8 @@ security:
     secret: ${JWT_PASSWORD}
     expiration:
       minutes: ${JWT_EXPIRATION_MINUTES}
+  cors:
+    url: ${CORS_URL_LOCAL}
 
 logging:
   level:
