@@ -57,7 +57,7 @@ public class GetTransactionUseCase implements TransactionServicePort {
                     return EARLIEST_DATE;
                 }, Comparator.reverseOrder()))
                 .skip(request.getOffset() != null ? request.getOffset() : DEFAULT_OFFSET)
-                .take(request.getLimit() != null ? request.getLimit() : DEFAULT_LIMIT);
+                .take(request.getLimit() != null ? request.getLimit() : DEFAULT_ITEM_LIST_LIMIT);
     }
 
     @Override
