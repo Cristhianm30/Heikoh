@@ -175,4 +175,29 @@ class AuthServiceImplTest {
                                 "User not found".equals(throwable.getMessage()))
                 .verify();
     }
+
+    @Test
+    void refresh_ShouldReturnLoginResponse_WhenSuccessful() {
+        String username = "testuser";
+        when(authServicePort.refreshToken(username)).thenReturn(Mono.just(loginData));
+        when(authDtoMapper.toLoginResponse(loginData)).thenReturn(loginResponse);
+
+        StepVerifier.create(authService.refresh(username))
+                .expectNextMatches(response ->
+                        "testToken".equals(response.getToken()) &&
+                                "testuser".equals(response.getUsername()) &&
+                                "test@example.com".equals(response.getEmail()))
+                .verifyComplete();
+    }
+
+    @Test
+    void refresh_ShouldHandleError_WhenRefreshFails() {
+        String username = "testuser";
+        when(authServicePort.refreshToken(username)).thenReturn(Mono.error(new RuntimeException("Token refresh failed")));
+
+        StepVerifier.create(authService.refresh(username))
+                .expectError(RuntimeException.class)
+                .verify();
+    }
+
 }
