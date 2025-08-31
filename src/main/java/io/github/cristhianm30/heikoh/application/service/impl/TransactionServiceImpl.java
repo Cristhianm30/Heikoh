@@ -81,35 +81,35 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionsResponse mapToTransactionsResponse(Object obj) {
-        if (obj instanceof ExpenseModel) {
-            return transactionMapper.toTransactionsResponse((ExpenseModel) obj);
-        } else if (obj instanceof IncomeModel) {
-            return transactionMapper.toTransactionsResponse((IncomeModel) obj);
+        if (obj instanceof ExpenseModel expenseModel) {
+            return transactionMapper.toTransactionsResponse(expenseModel);
+        } else if (obj instanceof IncomeModel incomeModel) {
+            return transactionMapper.toTransactionsResponse(incomeModel);
         }
         return null;
     }
 
     private TransactionResponse mapToTransactionResponse(Object obj) {
-        if (obj instanceof ExpenseModel) {
-            return transactionMapper.toTransactionResponse((ExpenseModel) obj);
-        } else if (obj instanceof IncomeModel) {
-            return transactionMapper.toTransactionResponse((IncomeModel) obj);
+        if (obj instanceof ExpenseModel expenseModel) {
+            return transactionMapper.toTransactionResponse(expenseModel);
+        } else if (obj instanceof IncomeModel incomeModel) {
+            return transactionMapper.toTransactionResponse(incomeModel);
         }
         return null;
     }
 
     private Object mapRequestToModel(String type, Object request) {
         if (TYPE_EXPENSE.equalsIgnoreCase(type)) {
-            if (request instanceof RegisterExpenseRequest) {
-                return transactionMapper.toExpenseModel((RegisterExpenseRequest) request);
-            } else if (request instanceof UpdateExpenseRequest) {
-                return transactionMapper.toExpenseModel((UpdateExpenseRequest) request);
+            if (request instanceof RegisterExpenseRequest registerExpenseRequest) {
+                return transactionMapper.toExpenseModel(registerExpenseRequest);
+            } else if (request instanceof UpdateExpenseRequest updateExpenseRequest) {
+                return transactionMapper.toExpenseModel(updateExpenseRequest);
             }
         } else if (TYPE_INCOME.equalsIgnoreCase(type)) {
-            if (request instanceof RegisterIncomeRequest) {
-                return transactionMapper.toIncomeModel((RegisterIncomeRequest) request);
-            } else if (request instanceof UpdateIncomeRequest) {
-                return transactionMapper.toIncomeModel((UpdateIncomeRequest) request);
+            if (request instanceof RegisterIncomeRequest registerExpenseRequest) {
+                return transactionMapper.toIncomeModel(registerExpenseRequest);
+            } else if (request instanceof UpdateIncomeRequest updateExpenseRequest) {
+                return transactionMapper.toIncomeModel(updateExpenseRequest);
             }
         }
         throw new InvalidTransactionTypeException(INVALID_REQUEST_TYPE_FOR_TRANSACTION);

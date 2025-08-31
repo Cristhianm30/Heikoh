@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,7 +93,7 @@ class UpdateGetTransactionUseCaseTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(expenseRepositoryPort.findByIdAndUserId(eq(transactionId), eq(userId)))
+        when(expenseRepositoryPort.findByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.just(expenseModel));
         when(expenseRepositoryPort.save(any(ExpenseModel.class)))
                 .thenReturn(Mono.just(savedExpense));
@@ -130,7 +129,7 @@ class UpdateGetTransactionUseCaseTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(incomeRepositoryPort.findByIdAndUserId(eq(transactionId), eq(userId)))
+        when(incomeRepositoryPort.findByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.just(incomeModel));
         when(incomeRepositoryPort.save(any(IncomeModel.class)))
                 .thenReturn(Mono.just(savedIncome));

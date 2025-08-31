@@ -1,7 +1,6 @@
 package io.github.cristhianm30.heikoh.domain.usecase;
 
 import io.github.cristhianm30.heikoh.domain.model.AggregationData;
-import io.github.cristhianm30.heikoh.domain.port.in.GetIncomeAggregationServicePort;
 import io.github.cristhianm30.heikoh.domain.port.out.IncomeRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 class GetIncomeAggregationUseCaseTest {
@@ -43,7 +41,7 @@ class GetIncomeAggregationUseCaseTest {
                 new AggregationData("Freelance", new BigDecimal("500.00"))
         );
 
-        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetweenByOrigin(eq(userId), eq(startDate), eq(endDate)))
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetweenByOrigin((userId), (startDate), (endDate)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getIncomeAggregationUseCase.getIncomeAggregation(userId, startDate, endDate);
@@ -62,7 +60,7 @@ class GetIncomeAggregationUseCaseTest {
                 new AggregationData("Freelance", new BigDecimal("1000.00"))
         );
 
-        when(incomeRepositoryPort.sumAmountByUserIdByOrigin(eq(userId)))
+        when(incomeRepositoryPort.sumAmountByUserIdByOrigin((userId)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getIncomeAggregationUseCase.getIncomeAggregation(userId, null, null);

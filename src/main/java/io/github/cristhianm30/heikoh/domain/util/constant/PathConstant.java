@@ -1,6 +1,11 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class PathConstant {
+
+    private PathConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String API_V1 = "api/v1/";
 
     public static final String AUTH_BASE_PATH = API_V1 + "auth/";

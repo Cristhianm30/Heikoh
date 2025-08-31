@@ -1,6 +1,11 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class AuthConstant {
+
+    private AuthConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_PASSWORD = "Invalid Password, please try again";
     public static final String BEARER = "Bearer ";

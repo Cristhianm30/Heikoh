@@ -1,6 +1,10 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class LogConstant {
+    private LogConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String USER_REGISTRATION_FAILED = "User registration failed: {}";
     public static final String UNEXPECTED_ERROR = "An unexpected error occurred: {}";
     public static final String USER_LOGIN_FAILED = "User login failed: {}";

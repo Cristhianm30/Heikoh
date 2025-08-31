@@ -34,9 +34,7 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
                         .build()
                         .parseSignedClaims(token)
                         .getPayload())
-                .onErrorMap(e -> {
-                    return new BadCredentialsException(JWT_TOKEN_INVALID, e);
-                })
+                .onErrorMap(e -> new BadCredentialsException(JWT_TOKEN_INVALID, e))
                 .map(claims -> {
                     String username = claims.getSubject();
                     String role = claims.get(ROLE, String.class);

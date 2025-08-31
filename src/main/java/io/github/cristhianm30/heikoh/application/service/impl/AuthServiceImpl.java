@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         return userServicePort.findByUsername(request.getUsername())
                 .switchIfEmpty(Mono.error(new UserNotFoundException(USER_NOT_FOUND)))
                 .flatMap(user -> {
-                    if (!user.getEnabled()) {
+                    if (Boolean.FALSE.equals(user.getEnabled())) {
                         log.warn(USER_NOT_ENABLED, user.getUsername());
                         return Mono.error(new UserNotEnabledException(ACCOUNT_IS_DISABLED));
                     }

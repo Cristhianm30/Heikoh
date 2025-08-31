@@ -65,27 +65,46 @@ Recuerda registar tus variables de entorno antes de correr el proyecto.
 ```yaml
 server:
   port: ${SERVER_PORT}
-  servlet:
-    context-path: /api
 
 spring:
   config:
     activate:
       on-profile: local
   r2dbc:
-    url: ${DB_LOCAL_R2DBC_URL}
+    url: r2dbc:mysql://${DB_LOCAL_R2DBC_URL}:${DB_LOCAL_PORT}/${DB_LOCAL_NAME}
     username: ${DB_LOCAL_USERNAME}
     password: ${DB_LOCAL_PASSWORD}
   sql:
     init:
-      mode: always
+      mode: never
 
 security:
   jwt:
     secret: ${JWT_PASSWORD}
     expiration:
       minutes: ${JWT_EXPIRATION_MINUTES}
+  cors:
+    url: ${CORS_URL_LOCAL}
 
+```
+Ejemplo del .env
+```yaml
+# Puerto del servidor
+SERVER_PORT=8080
+
+# Configuración de la base de datos local (R2DBC con MySQL)
+DB_LOCAL_R2DBC_URL=localhost
+DB_LOCAL_PORT=3306
+DB_LOCAL_NAME=nombre_de_tu_base_de_datos
+DB_LOCAL_USERNAME=usuario
+DB_LOCAL_PASSWORD=contraseña
+
+# Configuración de seguridad JWT
+JWT_PASSWORD=tu_clave_secreta_jwt
+JWT_EXPIRATION_MINUTES=60
+
+# Configuración de CORS
+CORS_URL_LOCAL=http://localhost:3000
 ```
 4. Ejecuta la aplicación
 ```bash

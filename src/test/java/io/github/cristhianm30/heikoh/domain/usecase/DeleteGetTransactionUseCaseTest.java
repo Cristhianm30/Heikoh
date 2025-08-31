@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,9 +48,9 @@ class DeleteGetTransactionUseCaseTest {
     @Test
     @DisplayName("Should successfully delete an expense")
     void shouldSuccessfullyDeleteAnExpense() {
-        when(expenseRepositoryPort.findByIdAndUserId(eq(transactionId), eq(userId)))
+        when(expenseRepositoryPort.findByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.just(expenseModel));
-        when(expenseRepositoryPort.deleteByIdAndUserId(eq(transactionId), eq(userId)))
+        when(expenseRepositoryPort.deleteByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(deleteTransactionUseCase.deleteTransaction(userId, transactionId, "expense"))
@@ -61,9 +60,9 @@ class DeleteGetTransactionUseCaseTest {
     @Test
     @DisplayName("Should successfully delete an income")
     void shouldSuccessfullyDeleteAnIncome() {
-        when(incomeRepositoryPort.findByIdAndUserId(eq(transactionId), eq(userId)))
+        when(incomeRepositoryPort.findByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.just(incomeModel));
-        when(incomeRepositoryPort.deleteByIdAndUserId(eq(transactionId), eq(userId)))
+        when(incomeRepositoryPort.deleteByIdAndUserId((transactionId), (userId)))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(deleteTransactionUseCase.deleteTransaction(userId, transactionId, "income"))
