@@ -16,8 +16,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 class GetExpenseAggregationUseCaseTest {
@@ -45,7 +43,7 @@ class GetExpenseAggregationUseCaseTest {
                 new AggregationData("Transport", new BigDecimal("50.00"))
         );
 
-        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByCategory(eq(userId), eq(startDate), eq(endDate)))
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByCategory((userId), (startDate), (endDate)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
@@ -65,7 +63,7 @@ class GetExpenseAggregationUseCaseTest {
                 new AggregationData("Transport", new BigDecimal("100.00"))
         );
 
-        when(expenseRepositoryPort.sumAmountByUserIdByCategory(eq(userId)))
+        when(expenseRepositoryPort.sumAmountByUserIdByCategory((userId)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);
@@ -87,7 +85,7 @@ class GetExpenseAggregationUseCaseTest {
                 new AggregationData("Cash", new BigDecimal("75.00"))
         );
 
-        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByPaymentMethod(eq(userId), eq(startDate), eq(endDate)))
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetweenByPaymentMethod((userId), (startDate), (endDate)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, startDate, endDate, groupBy);
@@ -107,7 +105,7 @@ class GetExpenseAggregationUseCaseTest {
                 new AggregationData("Cash", new BigDecimal("150.00"))
         );
 
-        when(expenseRepositoryPort.sumAmountByUserIdByPaymentMethod(eq(userId)))
+        when(expenseRepositoryPort.sumAmountByUserIdByPaymentMethod((userId)))
                 .thenReturn(Flux.fromIterable(expectedData));
 
         Flux<AggregationData> result = getExpenseAggregationUseCase.getExpenseAggregation(userId, null, null, groupBy);

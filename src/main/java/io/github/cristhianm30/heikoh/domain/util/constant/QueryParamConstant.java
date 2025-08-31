@@ -1,6 +1,11 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class QueryParamConstant {
+
+    private QueryParamConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String YEAR = "year";
     public static final String MONTH = "month";
     public static final String LIMIT = "limit";

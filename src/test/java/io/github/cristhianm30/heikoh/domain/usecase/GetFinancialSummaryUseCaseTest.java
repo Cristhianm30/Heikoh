@@ -14,9 +14,8 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+
 
 class GetFinancialSummaryUseCaseTest {
 
@@ -40,9 +39,9 @@ class GetFinancialSummaryUseCaseTest {
         LocalDate startDate = LocalDate.of(2024, 1, 1);
         LocalDate endDate = LocalDate.of(2024, 1, 31);
 
-        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween(eq(userId), eq(startDate), eq(endDate)))
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween((userId), (startDate), (endDate)))
                 .thenReturn(Mono.just(new BigDecimal("1000.00")));
-        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween(eq(userId), eq(startDate), eq(endDate)))
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween((userId), (startDate), (endDate)))
                 .thenReturn(Mono.just(new BigDecimal("500.00")));
 
         Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, startDate, endDate);
@@ -50,8 +49,8 @@ class GetFinancialSummaryUseCaseTest {
         StepVerifier.create(result)
                 .expectNextMatches(summary ->
                         summary.getTotalIncome().compareTo(new BigDecimal("1000.00")) == 0 &&
-                        summary.getTotalExpense().compareTo(new BigDecimal("500.00")) == 0 &&
-                        summary.getTotalBalance().compareTo(new BigDecimal("500.00")) == 0)
+                                summary.getTotalExpense().compareTo(new BigDecimal("500.00")) == 0 &&
+                                summary.getTotalBalance().compareTo(new BigDecimal("500.00")) == 0)
                 .verifyComplete();
     }
 
@@ -59,9 +58,9 @@ class GetFinancialSummaryUseCaseTest {
     void getFinancialSummary_withoutDateRange_shouldReturnCorrectSummary() {
         Long userId = 1L;
 
-        when(incomeRepositoryPort.sumAmountByUserId(eq(userId)))
+        when(incomeRepositoryPort.sumAmountByUserId((userId)))
                 .thenReturn(Mono.just(new BigDecimal("2000.00")));
-        when(expenseRepositoryPort.sumAmountByUserId(eq(userId)))
+        when(expenseRepositoryPort.sumAmountByUserId((userId)))
                 .thenReturn(Mono.just(new BigDecimal("750.00")));
 
         Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, null, null);
@@ -69,8 +68,8 @@ class GetFinancialSummaryUseCaseTest {
         StepVerifier.create(result)
                 .expectNextMatches(summary ->
                         summary.getTotalIncome().compareTo(new BigDecimal("2000.00")) == 0 &&
-                        summary.getTotalExpense().compareTo(new BigDecimal("750.00")) == 0 &&
-                        summary.getTotalBalance().compareTo(new BigDecimal("1250.00")) == 0)
+                                summary.getTotalExpense().compareTo(new BigDecimal("750.00")) == 0 &&
+                                summary.getTotalBalance().compareTo(new BigDecimal("1250.00")) == 0)
                 .verifyComplete();
     }
 
@@ -78,9 +77,9 @@ class GetFinancialSummaryUseCaseTest {
     void getFinancialSummary_withZeroAmounts_shouldReturnZeroSummary() {
         Long userId = 1L;
 
-        when(incomeRepositoryPort.sumAmountByUserId(eq(userId)))
+        when(incomeRepositoryPort.sumAmountByUserId((userId)))
                 .thenReturn(Mono.just(BigDecimal.ZERO));
-        when(expenseRepositoryPort.sumAmountByUserId(eq(userId)))
+        when(expenseRepositoryPort.sumAmountByUserId((userId)))
                 .thenReturn(Mono.just(BigDecimal.ZERO));
 
         Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, null, null);
@@ -88,8 +87,8 @@ class GetFinancialSummaryUseCaseTest {
         StepVerifier.create(result)
                 .expectNextMatches(summary ->
                         summary.getTotalIncome().compareTo(BigDecimal.ZERO) == 0 &&
-                        summary.getTotalExpense().compareTo(BigDecimal.ZERO) == 0 &&
-                        summary.getTotalBalance().compareTo(BigDecimal.ZERO) == 0)
+                                summary.getTotalExpense().compareTo(BigDecimal.ZERO) == 0 &&
+                                summary.getTotalBalance().compareTo(BigDecimal.ZERO) == 0)
                 .verifyComplete();
     }
 }

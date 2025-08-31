@@ -1,6 +1,11 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class QueryConstant {
+
+    private QueryConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String SELECT_CATEGORY_AS_KEY_SUM_AMOUNT_AS_TOTAL_AMOUNT_FROM_EXPENSES_WHERE_USER_ID_GROUP_BY_CATEGORY = "SELECT category AS `key`, SUM(amount) AS total_amount FROM expenses WHERE user_id = :userId GROUP BY category";
     public static final String SELECT_CATEGORY_AS_KEY_SUM_AMOUNT_AS_TOTAL_AMOUNT_FROM_EXPENSES_WHERE_USER_ID_AND_TRANSACTION_DATE_BETWEEN_GROUP_BY_CATEGORY = "SELECT category AS `key`, SUM(amount) AS total_amount FROM expenses WHERE user_id = :userId AND transaction_date BETWEEN :startDate AND :endDate GROUP BY category";
     public static final String SELECT_PAYMENT_METHOD_AS_KEY_SUM_AMOUNT_AS_TOTAL_AMOUNT_FROM_EXPENSES_WHERE_USER_ID_GROUP_BY_PAYMENT_METHOD = "SELECT payment_method AS `key`, SUM(amount) AS total_amount FROM expenses WHERE user_id = :userId GROUP BY payment_method";

@@ -1,22 +1,18 @@
 package io.github.cristhianm30.heikoh.application.service.impl;
 
 import io.github.cristhianm30.heikoh.application.dto.request.TransactionsRequest;
-import io.github.cristhianm30.heikoh.application.dto.request.RegisterExpenseRequest;
-import io.github.cristhianm30.heikoh.application.dto.request.RegisterIncomeRequest;
-import io.github.cristhianm30.heikoh.application.dto.request.UpdateExpenseRequest;
-import io.github.cristhianm30.heikoh.application.dto.request.UpdateIncomeRequest;
 import io.github.cristhianm30.heikoh.application.dto.response.TransactionResponse;
 import io.github.cristhianm30.heikoh.application.dto.response.TransactionsResponse;
 import io.github.cristhianm30.heikoh.application.mapper.TransactionMapper;
+import io.github.cristhianm30.heikoh.domain.exception.InvalidTransactionTypeException;
+import io.github.cristhianm30.heikoh.domain.exception.TransactionNotFoundException;
 import io.github.cristhianm30.heikoh.domain.model.ExpenseModel;
 import io.github.cristhianm30.heikoh.domain.model.IncomeModel;
 import io.github.cristhianm30.heikoh.domain.model.TransactionsData;
-import io.github.cristhianm30.heikoh.domain.port.in.TransactionServicePort;
-import io.github.cristhianm30.heikoh.domain.port.in.RegisterTransactionServicePort;
-import io.github.cristhianm30.heikoh.domain.port.in.UpdateTransactionServicePort;
 import io.github.cristhianm30.heikoh.domain.port.in.DeleteTransactionServicePort;
-import io.github.cristhianm30.heikoh.domain.exception.TransactionNotFoundException;
-import io.github.cristhianm30.heikoh.domain.exception.InvalidTransactionTypeException;
+import io.github.cristhianm30.heikoh.domain.port.in.RegisterTransactionServicePort;
+import io.github.cristhianm30.heikoh.domain.port.in.TransactionServicePort;
+import io.github.cristhianm30.heikoh.domain.port.in.UpdateTransactionServicePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,12 +27,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.EXPENSE_NOT_FOUND;
-import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INCOME_NOT_FOUND;
 import static io.github.cristhianm30.heikoh.domain.util.constant.ExceptionConstants.INVALID_TRANSACTION_TYPE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -110,7 +102,7 @@ class TransactionServiceImplTest {
                 .limit(10)
                 .offset(0)
                 .build();
-        
+
         transactionsData = new TransactionsData(
                 transactionsRequest.getYear(),
                 transactionsRequest.getMonth(),

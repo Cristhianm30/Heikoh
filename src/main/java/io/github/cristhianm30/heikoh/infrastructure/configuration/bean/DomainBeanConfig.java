@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 public class DomainBeanConfig {
 
     @Bean
-    public AuthServicePort AuthUseCase(UserServicePort userServicePort, JwtPort jwtPort) {
+    public AuthServicePort authServicePort(UserServicePort userServicePort, JwtPort jwtPort) {
         return new AuthUseCase(userServicePort, jwtPort);
     }
 
     @Bean
-    public UserServicePort UserUseCase(UserRepositoryPort userRepositoryPort) {
+    public UserServicePort userServicePort(UserRepositoryPort userRepositoryPort) {
         return new UserUseCase(userRepositoryPort);
     }
 

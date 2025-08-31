@@ -90,9 +90,8 @@ class DashboardServiceImplTest {
 
         AggregationResponse response1 = new AggregationResponse("Food", new BigDecimal("100.00"));
         AggregationResponse response2 = new AggregationResponse("Transport", new BigDecimal("50.00"));
-        List<AggregationResponse> responseList = Arrays.asList(response1, response2);
 
-        when(getExpenseAggregationServicePort.getExpenseAggregation(eq(userId), eq(startDate), eq(endDate), eq(groupBy)))
+        when(getExpenseAggregationServicePort.getExpenseAggregation((userId), (startDate), (endDate), (groupBy)))
                 .thenReturn(Flux.fromIterable(dataList));
         when(dashboardMapper.toAggregationResponse(any(AggregationData.class)))
                 .thenAnswer(invocation -> {
@@ -122,7 +121,7 @@ class DashboardServiceImplTest {
         AggregationResponse response1 = new AggregationResponse("Salary", new BigDecimal("1000.00"));
         AggregationResponse response2 = new AggregationResponse("Freelance", new BigDecimal("500.00"));
 
-        when(getIncomeAggregationServicePort.getIncomeAggregation(eq(userId), eq(startDate), eq(endDate)))
+        when(getIncomeAggregationServicePort.getIncomeAggregation((userId), (startDate), (endDate)))
                 .thenReturn(Flux.fromIterable(dataList));
         when(dashboardMapper.toAggregationResponse(any(AggregationData.class)))
                 .thenAnswer(invocation -> {
