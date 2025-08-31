@@ -8,11 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_BASE_PATH;
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_EXPENSES_SUMMARY_BY_PATH;
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_INCOMES_SUMMARY_BY_PATH;
-import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.DASHBOARD_SUMMARY_PATH;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static io.github.cristhianm30.heikoh.domain.util.constant.PathConstant.*;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import static org.springframework.web.reactive.function.server.RequestPredicates.path;
 import static org.springframework.web.reactive.function.server.RouterFunctions.nest;

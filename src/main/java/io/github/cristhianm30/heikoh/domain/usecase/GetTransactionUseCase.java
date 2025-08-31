@@ -49,10 +49,10 @@ public class GetTransactionUseCase implements TransactionServicePort {
 
         return transactions
                 .sort(Comparator.comparing(obj -> {
-                    if (obj instanceof ExpenseModel) {
-                        return ((ExpenseModel) obj).getTransactionDate();
-                    } else if (obj instanceof IncomeModel) {
-                        return ((IncomeModel) obj).getTransactionDate();
+                    if (obj instanceof ExpenseModel expenseModel) {
+                        return (expenseModel).getTransactionDate();
+                    } else if (obj instanceof IncomeModel incomeModel) {
+                        return (incomeModel).getTransactionDate();
                     }
                     return EARLIEST_DATE;
                 }, Comparator.reverseOrder()))

@@ -15,42 +15,42 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserPersistenceAdapter implements UserRepositoryPort {
 
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
     private final IUserEntityMapper userEntityMapper;
 
     @Override
     public Mono<UserModel> save(UserModel user) {
 
         UserEntity userEntity = userEntityMapper.toEntity(user);
-        return UserRepository.save(userEntity)
+        return userRepository.save(userEntity)
                 .map(userEntityMapper::toModel);
     }
 
     @Override
     public Mono<UserModel> findByUsername(String username) {
-        return UserRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .map(userEntityMapper::toModel);
     }
 
     @Override
     public Mono<UserModel> findById(Long id) {
-        return UserRepository.findById(id)
+        return userRepository.findById(id)
                 .map(userEntityMapper::toModel);
     }
 
     @Override
     public Mono<Boolean> existsByUsername(String username) {
-        return UserRepository.existsByUsername(username);
+        return userRepository.existsByUsername(username);
     }
 
     @Override
     public Mono<Boolean> existsByEmail(String email) {
-        return UserRepository.existsByEmail(email);
+        return userRepository.existsByEmail(email);
     }
 
     @Override
     public Mono<UserModel> findByUsernameOrEmail(String username, String email) {
-        return UserRepository.findByUsernameOrEmail(username, email)
+        return userRepository.findByUsernameOrEmail(username, email)
                 .map(userEntityMapper::toModel);
     }
 

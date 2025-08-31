@@ -1,6 +1,11 @@
 package io.github.cristhianm30.heikoh.domain.util.constant;
 
 public class PathVariableConstant {
+
+    private PathVariableConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String USER_ID = "userId";
     public static final String INCOME_ID = "incomeId";
     public static final String EXPENSE_ID = "expenseId";

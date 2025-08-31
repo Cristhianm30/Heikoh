@@ -3,6 +3,11 @@ package io.github.cristhianm30.heikoh.domain.util.constant;
 import java.time.LocalDate;
 
 public class TransactionConstant {
+
+    private TransactionConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static final String TYPE_INCOME = "income";
     public static final String TYPE_EXPENSE = "expense";
     public static final int DEFAULT_START_MONTH = 1;
