@@ -1,6 +1,10 @@
 package io.github.cristhianm30.heikoh.domain.model;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginDataTest {
@@ -52,7 +56,7 @@ class LoginDataTest {
     @Test
     void testAllArgsConstructor() {
         LoginData loginData = new LoginData(
-                "testToken", "testuser", "test@example.com",
+                "testToken", "testuser", "test@example.com",LocalDateTime.of(2025, 3, 12,0,0),
                 true, "USER", 1L);
 
         assertEquals("testToken", loginData.getToken());
