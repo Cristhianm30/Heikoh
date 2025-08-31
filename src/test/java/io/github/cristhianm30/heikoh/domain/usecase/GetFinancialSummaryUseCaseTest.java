@@ -91,4 +91,89 @@ class GetFinancialSummaryUseCaseTest {
                                 summary.getTotalBalance().compareTo(BigDecimal.ZERO) == 0)
                 .verifyComplete();
     }
+
+    @Test
+    void getFinancialSummary_withOnlyStartDate_shouldReturnCorrectSummary() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate lastestDate = LocalDate.of(3000, 12, 31); // LASTEST_DATE constant value
+
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate))
+                .thenReturn(Mono.just(new BigDecimal("1500.00")));
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate))
+                .thenReturn(Mono.just(new BigDecimal("600.00")));
+
+        Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, startDate, null);
+
+        StepVerifier.create(result)
+                .expectNextMatches(summary ->
+                        summary.getTotalIncome().compareTo(new BigDecimal("1500.00")) == 0 &&
+                                summary.getTotalExpense().compareTo(new BigDecimal("600.00")) == 0 &&
+                                summary.getTotalBalance().compareTo(new BigDecimal("900.00")) == 0)
+                .verifyComplete();
+    }
+
+    @Test
+    void getFinancialSummary_withOnlyEndDate_shouldReturnCorrectSummary() {
+        Long userId = 1L;
+        LocalDate endDate = LocalDate.of(2024, 12, 31);
+        LocalDate earliestDate = LocalDate.of(1000, 1, 1); // EARLIEST_DATE constant value
+
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate))
+                .thenReturn(Mono.just(new BigDecimal("3000.00")));
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate))
+                .thenReturn(Mono.just(new BigDecimal("1200.00")));
+
+        Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, null, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(summary ->
+                        summary.getTotalIncome().compareTo(new BigDecimal("3000.00")) == 0 &&
+                                summary.getTotalExpense().compareTo(new BigDecimal("1200.00")) == 0 &&
+                                summary.getTotalBalance().compareTo(new BigDecimal("1800.00")) == 0)
+                .verifyComplete();
+    }
+
+    @Test
+    void getFinancialSummary_withOnlyStartDateAndZeroAmounts_shouldReturnZeroSummary() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate lastestDate = LocalDate.of(3000, 12, 31); // LASTEST_DATE constant value
+
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate))
+                .thenReturn(Mono.just(BigDecimal.ZERO));
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, startDate, lastestDate))
+                .thenReturn(Mono.just(BigDecimal.ZERO));
+
+        Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, startDate, null);
+
+        StepVerifier.create(result)
+                .expectNextMatches(summary ->
+                        summary.getTotalIncome().compareTo(BigDecimal.ZERO) == 0 &&
+                                summary.getTotalExpense().compareTo(BigDecimal.ZERO) == 0 &&
+                                summary.getTotalBalance().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
+    }
+
+    @Test
+    void getFinancialSummary_withOnlyEndDateAndZeroAmounts_shouldReturnZeroSummary() {
+        Long userId = 1L;
+        LocalDate endDate = LocalDate.of(2024, 12, 31);
+        LocalDate earliestDate = LocalDate.of(1000, 1, 1); // EARLIEST_DATE constant value
+
+        when(incomeRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate))
+                .thenReturn(Mono.just(BigDecimal.ZERO));
+        when(expenseRepositoryPort.sumAmountByUserIdAndDateBetween(userId, earliestDate, endDate))
+                .thenReturn(Mono.just(BigDecimal.ZERO));
+
+        Mono<FinancialSummaryData> result = getFinancialSummaryUseCase.getFinancialSummary(userId, null, endDate);
+
+        StepVerifier.create(result)
+                .expectNextMatches(summary ->
+                        summary.getTotalIncome().compareTo(BigDecimal.ZERO) == 0 &&
+                                summary.getTotalExpense().compareTo(BigDecimal.ZERO) == 0 &&
+                                summary.getTotalBalance().compareTo(BigDecimal.ZERO) == 0)
+                .verifyComplete();
+    }
+
 }
