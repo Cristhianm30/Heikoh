@@ -8,6 +8,7 @@ mockito = "5.18.0"
 r2dbcMysql = "1.4.1"
 jjwt = "0.12.6"
 springSecurity = "6.5.1"
+openapi = "2.8.12"
 
 [libraries]
 springboot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "springboot" }
@@ -16,7 +17,6 @@ springboot-validation = { module = "org.springframework.boot:spring-boot-starter
 springboot-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "springboot" }
 springboot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "springboot" }
 springboot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "springboot" }
-#springboot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose", version.ref = "springboot" }
 springboot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springboot" }
 spring-security-test = { module = "org.springframework.security:spring-security-test", version.ref = "springSecurity" }
 mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
@@ -29,6 +29,7 @@ r2dbc-mysql = { module = "io.asyncer:r2dbc-mysql", version.ref = "r2dbcMysql" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+openapi-springdoc = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "openapi" }
 
 [bundles]
 spring-web-deps = [

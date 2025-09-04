@@ -40,5 +40,11 @@ public class PathConstant {
 
 
     public static final String AUTHORIZATION = "Authorization";
+    public static final String COMPLETE_SWAGGER = "/swagger-ui.html";
+    public static final String SWAGGER_PATH = "/swagger-ui/**";
+    public static final String SWAGGER_DOCS_PATH = "/v3/api-docs/**";
+
+
+
 
 }
