@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.POST, AUTH_BASE_PATH+ AUTH_LOGIN_ENDPOINT_PATH, AUTH_BASE_PATH+AUTH_REGISTER_ENDPOINT_PATH).permitAll()
-                        .pathMatchers(COMPLETE_ACTUATOR).permitAll()
+                        .pathMatchers(COMPLETE_ACTUATOR,SWAGGER_PATH,COMPLETE_SWAGGER,SWAGGER_DOCS_PATH).permitAll()
                         .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)

@@ -270,5 +270,127 @@ class ExpensePersistenceAdapterTest {
                 .verifyComplete();
     }
 
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnExpenseModels_WhenFound() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        
+        ExpenseEntity expenseEntity1 = ExpenseEntity.builder()
+                .id(1L)
+                .amount(BigDecimal.valueOf(50.00))
+                .description("Groceries")
+                .transactionDate(LocalDate.of(2024, 1, 15))
+                .category("Food")
+                .paymentMethod("Credit Card")
+                .userId(userId)
+                .build();
+        
+        ExpenseEntity expenseEntity2 = ExpenseEntity.builder()
+                .id(2L)
+                .amount(BigDecimal.valueOf(30.00))
+                .description("Transport")
+                .transactionDate(LocalDate.of(2024, 1, 20))
+                .category("Transport")
+                .paymentMethod("Cash")
+                .userId(userId)
+                .build();
+        
+        ExpenseModel expenseModel1 = ExpenseModel.builder()
+                .id(1L)
+                .amount(BigDecimal.valueOf(50.00))
+                .description("Groceries")
+                .transactionDate(LocalDate.of(2024, 1, 15))
+                .category("Food")
+                .paymentMethod("Credit Card")
+                .userId(userId)
+                .build();
+        
+        ExpenseModel expenseModel2 = ExpenseModel.builder()
+                .id(2L)
+                .amount(BigDecimal.valueOf(30.00))
+                .description("Transport")
+                .transactionDate(LocalDate.of(2024, 1, 20))
+                .category("Transport")
+                .paymentMethod("Cash")
+                .userId(userId)
+                .build();
+        
+        List<ExpenseEntity> entities = Arrays.asList(expenseEntity1, expenseEntity2);
+        
+        when(expenseRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(entities));
+        when(expenseEntityMapper.toModel(expenseEntity1)).thenReturn(expenseModel1);
+        when(expenseEntityMapper.toModel(expenseEntity2)).thenReturn(expenseModel2);
+
+        Flux<ExpenseModel> result = expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNext(expenseModel1)
+                .expectNext(expenseModel2)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnEmpty_WhenNoExpensesFound() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        
+        when(expenseRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate))
+                .thenReturn(Flux.empty());
+
+        Flux<ExpenseModel> result = expensePersistenceAdapter.findByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnExpenseModel_WhenFound() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(expenseRepository.findByIdAndUserId(id, userId)).thenReturn(Mono.just(expenseEntity));
+        when(expenseEntityMapper.toModel(expenseEntity)).thenReturn(expenseModel);
+
+        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(id, userId))
+                .expectNext(expenseModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnEmpty_WhenNotFound() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(expenseRepository.findByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.findByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully_WhenExpenseExists() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(expenseRepository.deleteByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.deleteByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully_WhenExpenseDoesNotExist() {
+        Long id = 999L;
+        Long userId = 1L;
+        
+        when(expenseRepository.deleteByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(expensePersistenceAdapter.deleteByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
 }
 

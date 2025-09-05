@@ -21,6 +21,10 @@ security:
   cors:
     url: ${CORS_URL_LOCAL}
 
+springdoc:
+  swagger-ui:
+    enabled: true
+
 logging:
   level:
     org.springframework.security: DEBUG

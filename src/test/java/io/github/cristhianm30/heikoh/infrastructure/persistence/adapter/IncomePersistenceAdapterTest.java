@@ -211,4 +211,123 @@ class IncomePersistenceAdapterTest {
                 .expectNextMatches(data -> data.getKey().equals("Salary") && data.getTotalAmount().compareTo(BigDecimal.ZERO) == 0)
                 .verifyComplete();
     }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnIncomeModels_WhenFound() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        
+        IncomeEntity incomeEntity1 = IncomeEntity.builder()
+                .id(1L)
+                .amount(BigDecimal.valueOf(1000.00))
+                .description("Salary")
+                .transactionDate(LocalDate.of(2024, 1, 15))
+                .origin("Work")
+                .userId(userId)
+                .build();
+        
+        IncomeEntity incomeEntity2 = IncomeEntity.builder()
+                .id(2L)
+                .amount(BigDecimal.valueOf(500.00))
+                .description("Freelance")
+                .transactionDate(LocalDate.of(2024, 1, 20))
+                .origin("Freelance")
+                .userId(userId)
+                .build();
+        
+        IncomeModel incomeModel1 = IncomeModel.builder()
+                .id(1L)
+                .amount(BigDecimal.valueOf(1000.00))
+                .description("Salary")
+                .transactionDate(LocalDate.of(2024, 1, 15))
+                .origin("Work")
+                .userId(userId)
+                .build();
+        
+        IncomeModel incomeModel2 = IncomeModel.builder()
+                .id(2L)
+                .amount(BigDecimal.valueOf(500.00))
+                .description("Freelance")
+                .transactionDate(LocalDate.of(2024, 1, 20))
+                .origin("Freelance")
+                .userId(userId)
+                .build();
+        
+        List<IncomeEntity> entities = Arrays.asList(incomeEntity1, incomeEntity2);
+        
+        when(incomeRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate))
+                .thenReturn(Flux.fromIterable(entities));
+        when(incomeEntityMapper.toModel(incomeEntity1)).thenReturn(incomeModel1);
+        when(incomeEntityMapper.toModel(incomeEntity2)).thenReturn(incomeModel2);
+
+        Flux<IncomeModel> result = incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectNext(incomeModel1)
+                .expectNext(incomeModel2)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByUserIdAndTransactionDateBetween_ShouldReturnEmpty_WhenNoIncomesFound() {
+        Long userId = 1L;
+        LocalDate startDate = LocalDate.of(2024, 1, 1);
+        LocalDate endDate = LocalDate.of(2024, 1, 31);
+        
+        when(incomeRepository.findByUserIdAndTransactionDateBetween(userId, startDate, endDate))
+                .thenReturn(Flux.empty());
+
+        Flux<IncomeModel> result = incomePersistenceAdapter.findByUserIdAndTransactionDateBetween(userId, startDate, endDate);
+
+        StepVerifier.create(result)
+                .expectComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnIncomeModel_WhenFound() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(incomeRepository.findByIdAndUserId(id, userId)).thenReturn(Mono.just(incomeEntity));
+        when(incomeEntityMapper.toModel(incomeEntity)).thenReturn(incomeModel);
+
+        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(id, userId))
+                .expectNext(incomeModel)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByIdAndUserId_ShouldReturnEmpty_WhenNotFound() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(incomeRepository.findByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.findByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully_WhenIncomeExists() {
+        Long id = 1L;
+        Long userId = 1L;
+        
+        when(incomeRepository.deleteByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.deleteByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
+    @Test
+    void deleteByIdAndUserId_ShouldCompleteSuccessfully_WhenIncomeDoesNotExist() {
+        Long id = 999L;
+        Long userId = 1L;
+        
+        when(incomeRepository.deleteByIdAndUserId(id, userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(incomePersistenceAdapter.deleteByIdAndUserId(id, userId))
+                .expectComplete();
+    }
+
 }
