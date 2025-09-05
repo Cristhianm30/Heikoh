@@ -30,6 +30,8 @@ dependencies {
 
 	runtimeOnly(libs.r2dbc.mysql)
 
+    implementation(libs.openapi.springdoc)
+
 	compileOnly(libs.lombok)
 	annotationProcessor(libs.lombok)
 	testCompileOnly(libs.lombok)

@@ -6,7 +6,7 @@ public class PathConstant {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final String API_V1 = "api/v1/";
+    public static final String API_V1 = "/api/v1/";
 
     public static final String AUTH_BASE_PATH = API_V1 + "auth/";
     public static final String TRANSACTION_BASE_PATH = API_V1 + "transaction/";
@@ -40,5 +40,11 @@ public class PathConstant {
 
 
     public static final String AUTHORIZATION = "Authorization";
+    public static final String COMPLETE_SWAGGER = "/swagger-ui.html";
+    public static final String SWAGGER_PATH = "/swagger-ui/**";
+    public static final String SWAGGER_DOCS_PATH = "/v3/api-docs/**";
+
+
+
 
 }
